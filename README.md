@@ -1,3 +1,5 @@
+# ** NOT READY FOR USE YET **
+
 # ng-scrolling-table
 ## An Angular Scrolling Table using HTML Tags
 
