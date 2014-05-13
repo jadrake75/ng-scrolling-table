@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html ng-app="examples">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../dist/ng-scrolling-table.css"/>
+    </head>
+    <body>
+
+        <div ng-cloak ng-controller="BasicCtrl">
+            <table
+                data-scrolling-table
+                data-table-empty="No items found."
+                width="100%" height="250" >
+                <thead>
+                    <tr>
+                        <th data-column-sortable data-col="rate">Name</th>
+                        <th>Phone Number</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr data-no-bind-children data-ng-repeat="c in data track by $index | limitTo: 500" >
+                        <td>{{c.name}}</td>
+                        <td>{{c.phoneNumber}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.8/angular.min.js"></script>
+        <script src="../dist/ng-scrolling-table.js"></script>
+        <script src="basic.js"></script>
+        
+    </body>
+</html>
