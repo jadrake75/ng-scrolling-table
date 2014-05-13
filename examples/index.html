@@ -21,7 +21,7 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr data-no-bind-children data-ng-repeat="c in data track by $index | limitTo: 500" >
+                    <tr data-no-bind-children data-ng-repeat="c in data | limitTo: 500 track by $index " >
                         <td>{{c.name}}</td>
                         <td>{{c.phoneNumber}}</td>
                     </tr>

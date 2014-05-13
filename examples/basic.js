@@ -2,7 +2,7 @@
 (function(angular) {
      'use strict';
      
-    angular.module('examples', ['scrolling-table'] )
+    angular.module('examples', ['ng-scrolling-table'] )
     .controller('BasicCtrl', function($scope) {
         $scope.data = [
     { 'name': 'Jason', 'phoneNumber': '763-555-5522' },
