@@ -23,11 +23,6 @@ td.fixed {
 
 .tableWrapper {
     width: 100%;
-    position: absolute;
-    top: 34px;
-    left: 0;
-    right: 0;
-    bottom: 0px;
     .scroller {
         .vertical-scroll;
     }
@@ -47,7 +42,7 @@ td.fixed {
         margin: 0;
         padding: 4px;
         font-size: @table-font-size;
-          
+
     }
     td {
         text-align: left;
@@ -56,7 +51,7 @@ td.fixed {
         font-size: @table-font-size;
     }
     tbody {
-        
+
         td {
             border-left: @table-border-tablecell;
             border-right: @table-border-tablecell;
@@ -80,7 +75,7 @@ td.fixed {
             }
             &.selected td {
                 .selectedItem;
-            } 
+            }
             &:nth-child(even) {
                 background-color: @color-table-evenRow;
             }
@@ -89,7 +84,7 @@ td.fixed {
             }
         }
     }
-    
+
     div {
         &:first-child {
             overflow: hidden;

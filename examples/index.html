@@ -10,6 +10,126 @@
     <body>
 
         <div ng-cloak ng-controller="BasicCtrl">
+
+            <div style="margin-top: 3em;">5 Rows - 22 Columns</div>
+            <table
+                data-scrolling-table
+                data-table-empty="No items found."
+                width="100%" height="250" >
+                <thead>
+                    <tr>
+                        <th data-column-sortable data-col="rate">Name</th>
+                        <th>Phone Number</th>
+                        <th width="100px">Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr data-no-bind-children data-ng-repeat="c in data | limitTo: 1 track by $index" >
+                        <td>{{c.name}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td width="100px">{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 3em;">50 Rows - 22 Columns</div>
+            <table
+                data-scrolling-table
+                data-table-empty="No items found."
+                width="100%" height="250" >
+                <thead>
+                    <tr>
+                        <th data-column-sortable data-col="rate">Name</th>
+                        <th width="100px">Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr data-no-bind-children data-ng-repeat="c in data | limitTo: 50 track by $index" >
+                        <td>{{c.name}}</td>
+                        <td width="100px">{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 3em;">500 Rows</div>
             <table
                 data-scrolling-table
                 data-table-empty="No items found."
@@ -21,13 +141,12 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr data-no-bind-children data-ng-repeat="c in data | limitTo: 500 track by $index " >
+                    <tr data-no-bind-children data-ng-repeat="c in data | limitTo: 500 track by $index" >
                         <td>{{c.name}}</td>
                         <td>{{c.phoneNumber}}</td>
                     </tr>
                 </tbody>
             </table>
-
         </div>
 
         

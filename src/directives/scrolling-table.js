@@ -1,15 +1,63 @@
 (function(angular) {
 
     'use strict';
-    
+
     var tables = angular.module('table.scrolling-table', []);
 
-	tables.directive('scrollingTable', function($timeout) {
+    var ctrlBind = function($parse) {
+        return function($scope) {
+            $scope.$watch = function(varExpression, func) {
+            // varExpression.exp is passed as the 'old' value
+            //   so that angular can remove the expression text from an
+            //   element's attributes, such as when using an expression for the class.
+                func($parse(varExpression)($scope), varExpression.exp);
+            };
+        };
+    };
+
+    var linkBind = function($timeout) {
+        return function(scope, element, attrs) {
+            $timeout(function() {
+                scope.$destroy();
+            }, 0, false);
+        };
+    };
+
+    tables.directive('noBind', function ($parse, $timeout) {
+        return {
+            restrict: 'A',
+            priority: 9999,
+            scope: true,
+            controller: ctrlBind($parse),
+            link: linkBind($timeout)
+        };
+    });
+
+    tables.directive('noBindChildren', function ($parse, $timeout) {
+        return {
+            restrict: 'A',
+            priority: -9999,
+            scope: true,
+            controller: ctrlBind($parse),
+            link: linkBind($timeout)
+        };
+    });
+
+    tables.directive('scrollingTable', function($timeout, $window) {
         var linker = function(scope, element, attrs) {
             var modelData = (attrs.data) ? attrs.data : 'data';
+            var maxHeight = element.css('height');
+            element.css('height', 0);
+
             var wrapper = element.wrap('<div class="tableWrapper"><div class="scroller"></div></div>').parents('.tableWrapper');
-            wrapper.resize(function() {
-                calculateDimensions(wrapper);
+            wrapper.find('.scroller').css('max-height', maxHeight);
+
+            var debounceId;
+            $($window).resize(function() {
+                $timeout.cancel(debounceId);
+                debounceId = $timeout(function() {
+                    calculateDimensions(wrapper);
+                }, 100, false);
             });
             var headWrap = $(document.createElement('div'))
                     .addClass('tableHeader')
@@ -28,6 +76,7 @@
                 recalcFn();
             });
         };
+
         function calculateDimensions(wrapDiv) {
             var header = wrapDiv.find('thead');
             var body = wrapDiv.find("tbody");
@@ -47,15 +96,16 @@
             if (allBodyCols.length > 0) {
                 table.find('tr th').each(function(index) {
                     var padding = 0;
-                    var desiredWidth = $(allBodyCols[index]).width() - padding + (( index === 0 ) ? -2 : 0);
-                    $(this).width(desiredWidth);
+                    var desiredWidth = $(allBodyCols[index]).width();
+                    $(this).css('max-width', desiredWidth);
                 });
             }
         }
+
         return {
             restrict: 'A',
             link: linker
         };
     });
-	
+
 })(angular);
