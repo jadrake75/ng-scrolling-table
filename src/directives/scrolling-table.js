@@ -56,6 +56,9 @@
 
             var wrapper = element.wrap('<div class="tableWrapper"><div class="scroller"></div></div>').parents('.tableWrapper');
             var maxHeight = element.css('max-height');
+            if( !maxHeight || maxHeight === '') {
+                maxHeight = element.height() + 'px';
+            }
             wrapper.find('.scroller').css('max-height', maxHeight);
             element.css('max-height', 0);
             wrapper.attr('id', tableUUID);
