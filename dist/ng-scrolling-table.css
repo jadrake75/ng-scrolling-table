@@ -101,11 +101,11 @@ td.fixed {
 }
 .tableHeader {
   background: #ffffff;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #666666), color-stop(1, #ffffff));
-  background: -ms-linear-gradient(bottom, #666666, #ffffff);
-  background: -moz-linear-gradient(center bottom, #666666 0%, #ffffff 100%);
-  background: -o-linear-gradient(#ffffff, #666666);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#666666', GradientType=0);
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #d9d9d9), color-stop(1, #ffffff));
+  background: -ms-linear-gradient(bottom, #d9d9d9, #ffffff);
+  background: -moz-linear-gradient(center bottom, #d9d9d9 0%, #ffffff 100%);
+  background: -o-linear-gradient(#ffffff, #d9d9d9);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#d9d9d9', GradientType=0);
 }
 .tableHeader tr {
   height: 25px;
