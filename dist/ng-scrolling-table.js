@@ -102,8 +102,8 @@
     });
 
     tables.directive('scrollingTable', function($timeout, $window, nzCssRuleEditor) {
-        var tableUUID = getUUID();
         var linker = function(scope, element, attrs) {
+            var tableUUID = getUUID();
 
             var modelData = (attrs.data) ? attrs.data : 'data';
 
@@ -123,7 +123,7 @@
                     calculateDimensions(wrapper);
                 }, 25, false);
             };
-            element.resize(function() {
+            $($window).resize(function() {
                 recalcFn();
             });
             var headWrap = $(document.createElement('div'))
@@ -135,21 +135,26 @@
 
             headTable.append(wrapper.find('thead'));
             var cloneHead = headWrap.clone();
-            wrapper.append(cloneHead.removeClass('tableHeader').addClass('dummyTable'));
+            wrapper.append(cloneHead.removeClass('tableHeader').addClass('minWidthHeaders'));
 
             scope.$watch(modelData, function() {
                 recalcFn();
             });
             
             $timeout(function() {
+                var scroller = wrapper.find('div.scroller');
+                wrapper.find('.tableHeader table').width("calc(100% - " + (scroller.width() - scroller.find('table').width()) + "px)");
+
                 var allMinWidthHeaders = cloneHead.find('th');
                 for (var i=0; i < allMinWidthHeaders.length; i++) {
                     var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i+1) + ')');
                     columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
-               /* This is a performance problem...    
-                * var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .scroller td:nth-child(' + (i+1) + ')');
-                    columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';*/
+                    /* Causes longer table rendering times
+                    var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .scroller td:nth-child(' + (i+1) + ')');
+                    columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
+                    */
                 }
+                cloneHead.remove();
             }, 0, false);
         };
 
@@ -163,10 +168,8 @@
 
         function calculateWidths(table) {
             var allBodyCols = table.find('tbody tr:first td');
-            var scroller = table.find('div.scroller');
-            table.find('.tableHeader table').width("calc(100% - " + (scroller.width() - scroller.find('table').width()) + "px)");
             if (allBodyCols.length > 0) {
-                table.find('.tableHeader tr th').each(function(index) {
+                table.find('.tableHeader th').each(function(index) {
                     var padding = 0;
                     var desiredWidth = $(allBodyCols[index]).width();
                     $(this).css('width', desiredWidth);

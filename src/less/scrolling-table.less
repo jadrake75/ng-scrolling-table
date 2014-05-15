@@ -1,13 +1,81 @@
 @import "elements.less";
 @import "table-theme.less";
 
-.vertical-scroll {
+.tableWrapper {
+    width: 100%;
     position: relative;
-    overflow-y: auto;
-    overflow-x: hidden;
+    top: 34px;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    .scroller {
+        position: relative;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background-color: @color-background;
+        
+        td {
+            border: @table-border-tablecell;
+        }
+        tr {
+            display: table-row;
+            color: @color-text;
+            &:hover {
+                background-color: @color-highlight-hover;
+            }
+            &.selected {
+                background-color: @color-table-selected-background;
+            }
+        }
+    }
+
+    .tableHeader {
+        width: 100%;
+        overflow: hidden;
+        .gradient(@color-gradient-light, @color-gradient-dark, @color-gradient-light);
+        table {
+            table-layout: fixed;
+        }
+        tr {
+            background-color: transparent;
+            border: 1px @color-border-highlight solid;
+            border-bottom: none;
+            th {
+                font-weight: normal;
+                .user-select(none);
+                border-left: @table-border-tablecell;
+                &:first-child {
+                    border-left: none;
+                }
+                &:hover {
+                    text-shadow: 1px 1px @color-text-shadow;
+                }
+            }
+        }
+    }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        table-layout: auto;
+    }
+    tr {
+        background-color: @color-table-oddRow;
+        &:nth-child(even) {
+            background-color: @color-table-evenRow;
+        }
+    }
+    th, td {
+        text-align: left;
+        margin: 0;
+        padding: 4px;
+        font-size: @table-font-size;
+    }
+
 }
 
-.dummyTable {
+.minWidthHeaders {
     width: 1px;
     height: 1px;
     overflow: hidden;
@@ -17,117 +85,8 @@
     }
 }
 
-.highlight {
-    background-color: @color-highlight-hover !important;
-}
-
-.selectedItem {
-    background-color: @color-table-selected-background !important;
-}
-
 td.fixed {
     width: 15px;
     max-width: 15px;
     min-width: 15px;
 }
-
-.tableWrapper {
-    width: 100%;
-    position: relative;
-    top: 34px;
-    left: 0;
-    right: 0;
-    bottom: 0px;
-    .scroller {
-        .vertical-scroll;
-    }
-    .tableHeader table {
-            table-layout: fixed;
-    }
-    table {
-        border-collapse: collapse;
-        border-spacing: 0;
-            width: 100%;
-            table-layout: auto;
-            tr {
-                width: 100%;
-            }
-    }
-    th {
-        text-align: left;
-        margin: 0;
-        padding: 4px;
-        font-size: @table-font-size;
-          
-    }
-    td {
-        text-align: left;
-        margin: 0;
-        padding: 4px;
-        font-size: @table-font-size;
-    }
-    tbody {
-        
-        td {
-            border-left: @table-border-tablecell;
-            border-right: @table-border-tablecell;
-            border-bottom: @table-border-tablecell;
-            a {
-                color: @color-legend;
-                text-decoration: underline;
-                &:hover {
-                   text-decoration: none;
-                }
-                &:visited {
-                    color: @color-legend;
-                }
-            }
-        }
-        tr {
-            display:table-row;
-            color: @color-text;
-            &:hover{
-                .highlight;
-            }
-            &.selected td {
-                .selectedItem;
-            } 
-            &:nth-child(even) {
-                background-color: @color-table-evenRow;
-            }
-            &:nth-child(odd) {
-                background-color: @color-table-oddRow;
-            }
-        }
-    }
-    
-    div {
-        &:nth-child(1) {
-            overflow: hidden;
-        }
-        &:nth-child(2) {
-            overflow-y: auto;
-            background-color: @color-background;
-        }
-    }
-}
-
-.tableHeader {
-    .gradient(@color-gradient-light, @color-gradient-dark, @color-gradient-light );
-    tr {
-        height: 25px;
-        border-bottom: 1px @color-border-highlight solid;
-        th {
-            border-left: @table-border-tablecell;
-            font-weight: normal;
-            .user-select(none);
-            &:first-child {
-                border-left: none;
-            }
-            &:hover {
-                text-shadow: 1px 1px @color-text-shadow;
-            }
-        }
-    }
-}
-
