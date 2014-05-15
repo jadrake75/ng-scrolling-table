@@ -1,0 +1,127 @@
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
+.vertical-scroll {
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.dummyTable {
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+}
+.dummyTable table {
+  table-layout: auto;
+}
+.highlight {
+  background-color: #a7c8dd !important;
+}
+.selectedItem {
+  background-color: #deeaf2 !important;
+}
+td.fixed {
+  width: 15px;
+  max-width: 15px;
+  min-width: 15px;
+}
+.tableWrapper {
+  width: 100%;
+}
+.tableWrapper .scroller {
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.tableWrapper .tableHeader table {
+  table-layout: fixed;
+}
+.tableWrapper table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  table-layout: auto;
+}
+.tableWrapper table tr {
+  width: 100%;
+}
+.tableWrapper th {
+  text-align: left;
+  margin: 0;
+  padding: 4px;
+  font-size: 12px;
+}
+.tableWrapper td {
+  text-align: left;
+  margin: 0;
+  padding: 4px;
+  font-size: 12px;
+}
+.tableWrapper tbody td {
+  border-left: 1px #d9d9d9 solid;
+  border-right: 1px #d9d9d9 solid;
+  border-bottom: 1px #d9d9d9 solid;
+}
+.tableWrapper tbody td a {
+  color: #0081c2;
+  text-decoration: underline;
+}
+.tableWrapper tbody td a:hover {
+  text-decoration: none;
+}
+.tableWrapper tbody td a:visited {
+  color: #0081c2;
+}
+.tableWrapper tbody tr {
+  display: table-row;
+  color: #000000;
+}
+.tableWrapper tbody tr:hover {
+  background-color: #a7c8dd !important;
+}
+.tableWrapper tbody tr.selected td {
+  background-color: #deeaf2 !important;
+}
+.tableWrapper tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+.tableWrapper tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+.tableWrapper div:nth-child(1) {
+  overflow: hidden;
+}
+.tableWrapper div:nth-child(2) {
+  overflow-y: auto;
+  background-color: #ffffff;
+}
+.tableHeader {
+  background: #ffffff;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #666666), color-stop(1, #ffffff));
+  background: -ms-linear-gradient(bottom, #666666, #ffffff);
+  background: -moz-linear-gradient(center bottom, #666666 0%, #ffffff 100%);
+  background: -o-linear-gradient(#ffffff, #666666);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#666666', GradientType=0);
+}
+.tableHeader tr {
+  height: 25px;
+  border-bottom: 1px #d9d9d9 solid;
+}
+.tableHeader tr th {
+  border-left: 1px #d9d9d9 solid;
+  font-weight: normal;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.tableHeader tr th:first-child {
+  border-left: none;
+}
+.tableHeader tr th:hover {
+  text-shadow: 1px 1px #f5f5f5;
+}

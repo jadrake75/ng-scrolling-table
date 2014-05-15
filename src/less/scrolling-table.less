@@ -7,6 +7,16 @@
     overflow-x: hidden;
 }
 
+.dummyTable {
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    table {
+        table-layout: auto;
+    }
+}
+
 .highlight {
     background-color: @color-highlight-hover !important;
 }
@@ -23,26 +33,32 @@ td.fixed {
 
 .tableWrapper {
     width: 100%;
+    position: absolute;
+    top: 34px;
+    left: 0;
+    right: 0;
+    bottom: 0px;
     .scroller {
         .vertical-scroll;
+    }
+    .tableHeader table {
+            table-layout: fixed;
     }
     table {
         border-collapse: collapse;
         border-spacing: 0;
-        &:first-child {
             width: 100%;
-            table-layout: fixed;
+            table-layout: auto;
             tr {
                 width: 100%;
             }
-        }
     }
     th {
         text-align: left;
         margin: 0;
         padding: 4px;
         font-size: @table-font-size;
-
+          
     }
     td {
         text-align: left;
@@ -51,7 +67,7 @@ td.fixed {
         font-size: @table-font-size;
     }
     tbody {
-
+        
         td {
             border-left: @table-border-tablecell;
             border-right: @table-border-tablecell;
@@ -75,7 +91,7 @@ td.fixed {
             }
             &.selected td {
                 .selectedItem;
-            }
+            } 
             &:nth-child(even) {
                 background-color: @color-table-evenRow;
             }
@@ -84,9 +100,9 @@ td.fixed {
             }
         }
     }
-
+    
     div {
-        &:first-child {
+        &:nth-child(1) {
             overflow: hidden;
         }
         &:nth-child(2) {
