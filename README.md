@@ -4,7 +4,7 @@
 ## An Angular Scrolling Table using HTML Tags
 
 __Example:__
-* [Live Example] (http://jsbin.com/fagujire)
+* [Live Example] (https://bcoffield.me/public/ng-scrolling-table/live/examples/)
 
 __Contributors:__
 
