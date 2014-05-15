@@ -2,7 +2,12 @@
 
     'use strict';
 
-    var tables = angular.module('table.scrolling-table', []);
+    var UUID = 0;
+    var getUUID = function() {
+        return 'scrollingTable-' + UUID++;
+    }
+
+    var tables = angular.module('table.scrolling-table', ['net.enzey.service.css.editor']);
 
     var ctrlBind = function($parse) {
         return function($scope) {
@@ -43,26 +48,29 @@
         };
     });
 
-    tables.directive('scrollingTable', function($timeout, $window) {
+    tables.directive('scrollingTable', function($timeout, $window, nzCssRuleEditor) {
+        var tableUUID = getUUID();
         var linker = function(scope, element, attrs) {
+
             var modelData = (attrs.data) ? attrs.data : 'data';
-            var maxHeight = element.css('height');
-            element.css('height', 0);
 
             var wrapper = element.wrap('<div class="tableWrapper"><div class="scroller"></div></div>').parents('.tableWrapper');
+            var maxHeight = element.css('max-height');
             wrapper.find('.scroller').css('max-height', maxHeight);
+            element.css('max-height', 0);
+            wrapper.attr('id', tableUUID);
 
             var debounceId;
             $($window).resize(function() {
                 $timeout.cancel(debounceId);
                 debounceId = $timeout(function() {
                     calculateDimensions(wrapper);
-                }, 100, false);
+                }, 50, false);
             });
             var headWrap = $(document.createElement('div'))
                     .addClass('tableHeader')
                     .prependTo(wrapper);
-            $(document.createElement('table'))
+            var foo = $(document.createElement('table'))
                     .appendTo(headWrap)
                     .css("width", "100%");
 
@@ -72,20 +80,29 @@
                 }, 50);
             };
 
+            foo.append(wrapper.find('thead'));
+            var cloneFoo = headWrap.clone();
+            wrapper.append(cloneFoo.removeClass('tableHeader').addClass('dummyTable'));
+
             scope.$watch(modelData, function() {
                 recalcFn();
             });
+            $timeout(function() {
+                var allMinWidthHeaders = cloneFoo.find('th');
+                for (var i=0; i < allMinWidthHeaders.length; i++) {
+                    var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i+1) + ')');
+                    columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
+                    var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .scroller td:nth-child(' + (i+1) + ')');
+                    columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
+                }
+            }, 1, false);
         };
 
         function calculateDimensions(wrapDiv) {
             var header = wrapDiv.find('thead');
             var body = wrapDiv.find("tbody");
-            var innerWrap = body.parents('div.scroller');
-            var headerTable = wrapDiv.find('div.tableHeader table');
-            headerTable.append(header);
             var h = header.find('tr').height();
             h = (h > 0) ? h : 25;
-            innerWrap.height(wrapDiv.height() - h);
             calculateWidths(wrapDiv);
         }
 
@@ -94,10 +111,10 @@
             var scroller = table.find('div.scroller');
             table.find('.tableHeader table').width("calc(100% - " + (scroller.width() - scroller.find('table').width()) + "px)");
             if (allBodyCols.length > 0) {
-                table.find('tr th').each(function(index) {
+                table.find('.tableHeader tr th').each(function(index) {
                     var padding = 0;
                     var desiredWidth = $(allBodyCols[index]).width();
-                    $(this).css('max-width', desiredWidth);
+                    $(this).css('width', desiredWidth);
                 });
             }
         }
