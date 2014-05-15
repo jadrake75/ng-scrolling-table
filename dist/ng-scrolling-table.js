@@ -109,8 +109,8 @@
 
             var wrapper = element.wrap('<div class="tableWrapper"><div class="scroller"></div></div>').parents('.tableWrapper');
             var maxHeight = element.css('max-height');
-            if( !maxHeight || maxHeight === 'none') {
-                maxHeight = element.height() + 'px';
+            if( (!maxHeight || maxHeight === 'none') && attrs.height ) {
+                maxHeight = attrs.height + 'px';
             }
             wrapper.find('.scroller').css('max-height', maxHeight);
             element.css('max-height', 0);
