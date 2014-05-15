@@ -53,11 +53,11 @@
         var linker = function(scope, element, attrs) {
 
             var modelData = (attrs.data) ? attrs.data : 'data';
-            var maxHeight = element.css('height');
-            element.css('height', 0);
 
             var wrapper = element.wrap('<div class="tableWrapper"><div class="scroller"></div></div>').parents('.tableWrapper');
+            var maxHeight = element.css('max-height');
             wrapper.find('.scroller').css('max-height', maxHeight);
+            element.css('max-height', 0);
             wrapper.attr('id', tableUUID);
 
             var debounceId;
@@ -101,10 +101,8 @@
         function calculateDimensions(wrapDiv) {
             var header = wrapDiv.find('thead');
             var body = wrapDiv.find("tbody");
-            var innerWrap = body.parents('div.scroller');
             var h = header.find('tr').height();
             h = (h > 0) ? h : 25;
-            innerWrap.height(wrapDiv.height() - h);
             calculateWidths(wrapDiv);
         }
 
@@ -117,7 +115,6 @@
                     var padding = 0;
                     var desiredWidth = $(allBodyCols[index]).width();
                     $(this).css('width', desiredWidth);
-                    //$(this).css('min-width', desiredWidth);
                 });
             }
         }
