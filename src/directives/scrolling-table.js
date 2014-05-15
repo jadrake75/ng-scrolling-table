@@ -5,7 +5,7 @@
     var UUID = 0;
     var getUUID = function() {
         return 'scrollingTable-' + UUID++;
-    }
+    };
 
     var tables = angular.module('table.scrolling-table', ['net.enzey.service.css.editor']);
 
@@ -61,41 +61,40 @@
             wrapper.attr('id', tableUUID);
 
             var debounceId;
-            $($window).resize(function() {
+            var recalcFn = function() {
                 $timeout.cancel(debounceId);
                 debounceId = $timeout(function() {
                     calculateDimensions(wrapper);
-                }, 50, false);
+                }, 25, false);
+            };
+            element.resize(function() {
+                recalcFn();
             });
             var headWrap = $(document.createElement('div'))
                     .addClass('tableHeader')
                     .prependTo(wrapper);
-            var foo = $(document.createElement('table'))
+            var headTable = $(document.createElement('table'))
                     .appendTo(headWrap)
                     .css("width", "100%");
 
-            var recalcFn = function() {
-                $timeout(function() {
-                    calculateDimensions(wrapper);
-                }, 50);
-            };
-
-            foo.append(wrapper.find('thead'));
-            var cloneFoo = headWrap.clone();
-            wrapper.append(cloneFoo.removeClass('tableHeader').addClass('dummyTable'));
+            headTable.append(wrapper.find('thead'));
+            var cloneHead = headWrap.clone();
+            wrapper.append(cloneHead.removeClass('tableHeader').addClass('dummyTable'));
 
             scope.$watch(modelData, function() {
                 recalcFn();
             });
+            
             $timeout(function() {
-                var allMinWidthHeaders = cloneFoo.find('th');
+                var allMinWidthHeaders = cloneHead.find('th');
                 for (var i=0; i < allMinWidthHeaders.length; i++) {
                     var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i+1) + ')');
                     columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
-                    var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .scroller td:nth-child(' + (i+1) + ')');
-                    columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
+               /* This is a performance problem...    
+                * var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .scroller td:nth-child(' + (i+1) + ')');
+                    columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';*/
                 }
-            }, 1, false);
+            }, 0, false);
         };
 
         function calculateDimensions(wrapDiv) {
