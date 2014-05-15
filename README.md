@@ -3,6 +3,9 @@
 # ng-scrolling-table
 ## An Angular Scrolling Table using HTML Tags
 
+__Build status:__
+* [![Build Status](http://ec2-54-186-51-9.us-west-2.compute.amazonaws.com:8080/buildStatus/icon?job=ng-scrolling-table live demo)](http://ec2-54-186-51-9.us-west-2.compute.amazonaws.com:8080/job/ng-scrolling-table%20live%20demo/)
+
 __Example:__
 * [Live Example] (https://bcoffield.me/public/ng-scrolling-table/live/examples/)
 
