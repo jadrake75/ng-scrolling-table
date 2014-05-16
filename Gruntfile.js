@@ -50,12 +50,21 @@ module.exports = function (grunt) {
                     }
                 ]
             }
+        },
+        watch: {
+            scripts: {
+                files: ['src/**/*.js', 'src/less/*.less'],
+                tasks: ['dev'],
+                options: {
+                    nospawn: true
+                }
+            }
         }
     });
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-copy');
-
 
     grunt.registerTask('dev', ['concat:dev', 'copy:dev', 'less:dev']);
     grunt.registerTask('production', ['concat:dev', 'copy:dev', 'less:production']);
