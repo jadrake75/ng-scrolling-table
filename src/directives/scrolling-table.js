@@ -9,45 +9,6 @@
 
     var tables = angular.module('table.scrolling-table', ['net.enzey.service.css.editor']);
 
-    var ctrlBind = function($parse) {
-        return function($scope) {
-            $scope.$watch = function(varExpression, func) {
-            // varExpression.exp is passed as the 'old' value
-            //   so that angular can remove the expression text from an
-            //   element's attributes, such as when using an expression for the class.
-                func($parse(varExpression)($scope), varExpression.exp);
-            };
-        };
-    };
-
-    var linkBind = function($timeout) {
-        return function(scope, element, attrs) {
-            $timeout(function() {
-                scope.$destroy();
-            }, 0, false);
-        };
-    };
-
-    tables.directive('noBind', function ($parse, $timeout) {
-        return {
-            restrict: 'A',
-            priority: 9999,
-            scope: true,
-            controller: ctrlBind($parse),
-            link: linkBind($timeout)
-        };
-    });
-
-    tables.directive('noBindChildren', function ($parse, $timeout) {
-        return {
-            restrict: 'A',
-            priority: -9999,
-            scope: true,
-            controller: ctrlBind($parse),
-            link: linkBind($timeout)
-        };
-    });
-
     tables.directive('scrollingTable', function($timeout, $window, nzCssRuleEditor) {
         var linker = function(scope, element, attrs) {
             var tableUUID = getUUID();
