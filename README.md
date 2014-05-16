@@ -14,3 +14,4 @@ __Contributors:__
 ng-scrolling-table Team:
 * [Jason Drake](https://github.com/jadrake75)
 * [Joseph Aseplund] (https://github.com/xanir)
+* [Brien Coffield] (https://github.com/coffbr01)
