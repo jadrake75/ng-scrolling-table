@@ -41,11 +41,22 @@ module.exports = function (grunt) {
                 dest: '<%= distdir %>/ng-scrolling-table.js'
             }
         },
+        copy: {
+            dev: {
+                files: [
+                    {
+                        src: ['node_modules/grunt-contrib-lesselements/elements.less'],
+                        dest: 'src/less/elements.less'
+                    }
+                ]
+            }
+        }
     });
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-less');
-    
-    
-    grunt.registerTask('dev', ['concat:dev','less:dev']);
-    grunt.registerTask('production', ['concat:dev', 'less:production']);
+    grunt.loadNpmTasks('grunt-contrib-copy');
+
+
+    grunt.registerTask('dev', ['concat:dev', 'copy:dev', 'less:dev']);
+    grunt.registerTask('production', ['concat:dev', 'copy:dev', 'less:production']);
 };
