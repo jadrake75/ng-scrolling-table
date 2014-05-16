@@ -6,10 +6,15 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="../dist/ng-scrolling-table.css"/>
+        <style>
+            [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+                display: none !important;
+            }
+        </style>
     </head>
     <body>
 
-        <div ng-cloak ng-controller="BasicCtrl" style="display:none;">
+        <div ng-cloak ng-controller="BasicCtrl">
 
             <div style="margin-top: 3em;">5 Rows - 22 Columns</div>
             <table
