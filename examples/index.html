@@ -48,7 +48,7 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr data-no-bind-children data-ng-repeat="c in data | limitTo: 1 track by $index" >
+                    <tr data-ng-repeat="c in data | limitTo: 1 track by $index" >
                         <td>{{c.name}}</td>
                         <td>{{c.phoneNumber.slice(0, 2)}}</td>
                         <td width="100px">{{c.phoneNumber.slice(0, 2)}}</td>
@@ -109,7 +109,7 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr data-no-bind-children data-ng-repeat="c in data | limitTo: 50 track by $index" >
+                    <tr data-ng-repeat="c in data | limitTo: 50 track by $index" >
                         <td>{{c.name}}</td>
                         <td width="100px">{{c.phoneNumber.slice(0, 2)}}</td>
                         <td>{{c.phoneNumber.slice(0, 2)}}</td>
@@ -149,7 +149,7 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr data-no-bind-children data-ng-repeat="c in data | limitTo: 500 track by $index" >
+                    <tr data-ng-repeat="c in data | limitTo: 500 track by $index" >
                         <td>{{c.name}}</td>
                         <td>{{c.phoneNumber}}</td>
                     </tr>
