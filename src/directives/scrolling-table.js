@@ -52,6 +52,7 @@
                 element.find('.tableHeader table').width("calc(100% - " + (scroller.width() - scroller.find('table').width()) + "px)");
 
                 var tableUUID = tableService.getIdOfContainingTable(element);
+
                 var allMinWidthHeaders = cloneHead.find('th');
                 for (var i=0; i < allMinWidthHeaders.length; i++) {
                     var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i+1) + ')');
