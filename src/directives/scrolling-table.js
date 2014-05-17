@@ -7,14 +7,24 @@
         return 'scrollingTable-' + UUID++;
     };
 
-    var getIdOfContainingTable = function(element) {
-        var tableContainer = element.closest('table .tableWrapper');
-        if (tableContainer && tableContainer[0]) {
-            return tableContainer[0].id;
-        }
-    }
-
     var tables = angular.module('table.scrolling-table', ['net.enzey.service.css.editor']);
+
+    tables.service('tableService', function() {
+        return {
+            getIdOfContainingTable: function(element) {
+                var tableContainer = element.closest('.tableWrapper');
+                if (tableContainer && tableContainer[0]) {
+                    return tableContainer[0].id;
+                }
+
+                // The element with the directive was passed.
+                tableContainer = element.find('.tableWrapper');
+                if (tableContainer && tableContainer.length === 1) {
+                    return tableContainer[0].id;
+                }
+            }
+        }
+    });
 
     var ctrlBind = function($parse) {
         return function($scope) {
@@ -55,7 +65,7 @@
         };
     });
 
-    tables.directive('scrollingTable', function($timeout, $window, nzCssRuleEditor) {
+    tables.directive('scrollingTable', function($timeout, $window, nzCssRuleEditor, tableService) {
         var linker = function(scope, element, attrs) {
             var modelData = (attrs.data) ? attrs.data : 'data';
 
@@ -80,15 +90,13 @@
                 var scroller = element.find('div.scroller');
                 element.find('.tableHeader table').width("calc(100% - " + (scroller.width() - scroller.find('table').width()) + "px)");
 
-                var tableUUID = getIdOfContainingTable(element);
+                var tableUUID = tableService.getIdOfContainingTable(element);
                 var allMinWidthHeaders = cloneHead.find('th');
                 for (var i=0; i < allMinWidthHeaders.length; i++) {
                     var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i+1) + ')');
                     columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
-                    /* Causes longer table rendering times
                     var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .scroller td:nth-child(' + (i+1) + ')');
                     columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
-                    */
                 }
                 cloneHead.remove();
             }, 0, false);
@@ -115,7 +123,7 @@
 
         return {
             restrict: 'A',
-            compile: function compile($element, tAttrs, transclude) {
+            compile: function compile($element, attrs, transclude) {
                 var tableUUID = getUUID();
 
                 var wrapper = $('<div class="tableWrapper"></div>');
@@ -144,8 +152,8 @@
                 wrapper.find('.scroller').css('max-height', maxHeight);
                 $element.css('max-height', 0);
 
-                $element.empty();
-                $element.append(wrapper);
+                $element.after(wrapper);
+                $element.remove();
 
                 return {
                     // Is run BEFORE child directives.
