@@ -91,12 +91,15 @@
                 element.find('.tableHeader table').width("calc(100% - " + (scroller.width() - scroller.find('table').width()) + "px)");
 
                 var tableUUID = tableService.getIdOfContainingTable(element);
+
                 var allMinWidthHeaders = cloneHead.find('th');
                 for (var i=0; i < allMinWidthHeaders.length; i++) {
                     var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i+1) + ')');
                     columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
+                    /* Causes longer table rendering times
                     var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .scroller td:nth-child(' + (i+1) + ')');
                     columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
+                    */
                 }
                 cloneHead.remove();
             }, 0, false);

@@ -5,7 +5,8 @@
     angular.module('ng-scrolling-table', [
         'table.scrolling-table', 
         'table.empty-table',
-        'table.table-selector'
+        'table.table-selector',
+        'table.highlightColumn'
     ]);
     
 })(angular);
