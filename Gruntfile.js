@@ -41,8 +41,15 @@ module.exports = function (grunt) {
                 dest: '<%= distdir %>/ng-scrolling-table.js'
             }
         },
+        uglify: {
+            production: {
+                files: {
+                    '<%= distdir %>/ng-scrolling-table.min.js': ['src/**/*.js']
+                }
+            }
+        },
         copy: {
-            dev: {
+            lesselements: {
                 files: [
                     {
                         src: ['node_modules/grunt-contrib-lesselements/elements.less'],
@@ -63,11 +70,11 @@ module.exports = function (grunt) {
         compress: {
             production: {
                 options: {
-                    archive: 'dist/ng-scrolling-table.tar.gz'
+                    archive: '<%= distdir %>/ng-scrolling-table.tar.gz'
                 },
                 files: [
                     {
-                        "cwd": "dist/",
+                        "cwd": "<%= distdir %>/",
                         "src": "./**",
                         "dest": "ng-scrolling-table",
                         "expand": true
@@ -75,15 +82,16 @@ module.exports = function (grunt) {
                 ]
             }
         },
-        clean: ["dist"]
+        clean: ["<%= distdir %>"]
     });
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('dev', ['concat:dev', 'copy:dev', 'less:dev']);
-    grunt.registerTask('production', ['concat:dev', 'copy:dev', 'less:production', 'compress:production']);
+    grunt.registerTask('dev', ['concat:dev', 'copy:lesselements', 'less:dev']);
+    grunt.registerTask('production', ['uglify:production', 'copy:lesselements', 'less:production', 'compress:production']);
 };
