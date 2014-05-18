@@ -1,9 +1,9 @@
 module.exports = function (grunt) {
-    
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         distdir: 'dist',
-        
+
         less: {
             dev: {
                 options: {
@@ -59,13 +59,31 @@ module.exports = function (grunt) {
                     nospawn: true
                 }
             }
-        }
+        },
+        compress: {
+            production: {
+                options: {
+                    archive: 'dist/ng-scrolling-table.tar.gz'
+                },
+                files: [
+                    {
+                        "cwd": "dist/",
+                        "src": "./**",
+                        "dest": "ng-scrolling-table",
+                        "expand": true
+                    }
+                ]
+            }
+        },
+        clean: ["dist"]
     });
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.registerTask('dev', ['concat:dev', 'copy:dev', 'less:dev']);
-    grunt.registerTask('production', ['concat:dev', 'copy:dev', 'less:production']);
+    grunt.registerTask('production', ['concat:dev', 'copy:dev', 'less:production', 'compress:production']);
 };
