@@ -26,21 +26,6 @@
         }
     });
 
-    tables.directive('tableRow', function($compile) {
-        return {
-            restrict: 'A',
-            priority: 99,
-            compile: function($element, attrs, transclude) {
-                return {
-                    pre: function(scope, element, attrs) {
-                        element.after($compile( scope[attrs.tableRow].join('') )(scope));
-                        element.remove();
-                    }
-                }
-            },
-        }
-    });
-
     tables.directive('scrollingTable', function($timeout, $window, $compile, nzCssRuleEditor, tableService) {
         function calculateDimensions(wrapDiv) {
             var header = wrapDiv.find('thead');
@@ -102,7 +87,7 @@
                     headersElemArray.push(wrapper.outerHTML.match(regexOnlyTagData)[0]);
                 });
                 $(headerRows[0]).empty();
-                $(headerRows[0]).append('<td table-row="headersElemArray"></td>');
+                $(headerRows[0]).append( $( headersElemArray.join('') ) );
 
                 var bodyRows = wrapper.find('tbody tr');
                 var bodyElemArray = [];
@@ -110,7 +95,7 @@
                     bodyElemArray.push(wrapper.outerHTML.match(regexOnlyTagData)[0]);
                 });
                 $(bodyRows[0]).empty();
-                $(bodyRows[0]).append('<td table-row="bodyElemArray"></td>');
+                $(bodyRows[0]).append( $( bodyElemArray.join('') ) );
 
                 return {
                     // Is run BEFORE child directives.
