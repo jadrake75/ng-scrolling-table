@@ -16,7 +16,7 @@
                         columnRule.backgroundColor = 'lightblue';
                     });
                     $(element).mouseout(function() {
-                        columnRule.backgroundColor = null;
+                        columnRule.backgroundColor = '';
                     });
                 }
             }
