@@ -26,46 +26,7 @@
         }
     });
 
-    tables.directive('scrollingTable', function($timeout, $window, nzCssRuleEditor, tableService) {
-        var linker = function(scope, element, attrs) {
-            var modelData = (attrs.data) ? attrs.data : 'data';
-
-            var debounceId;
-            var recalcFn = function() {
-                $timeout.cancel(debounceId);
-                debounceId = $timeout(function() {
-                    calculateDimensions(element);
-                }, 25, false);
-            };
-            $($window).resize(function() {
-                recalcFn();
-            });
-            scope.$watch(modelData, function() {
-                recalcFn();
-            });
-
-            var cloneHead = $(element.find('thead')[0]).clone();
-            element.append(cloneHead.removeClass('tableHeader').addClass('minWidthHeaders'));
-
-            $timeout(function() {
-                var scroller = element.find('div.scroller');
-                element.find('.tableHeader table').width("calc(100% - " + (scroller.width() - scroller.find('table').width()) + "px)");
-
-                var tableUUID = tableService.getIdOfContainingTable(element);
-
-                var allMinWidthHeaders = cloneHead.find('th');
-                for (var i=0; i < allMinWidthHeaders.length; i++) {
-                    var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i+1) + ')');
-                    columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
-                    /* Causes longer table rendering times
-                    var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .scroller td:nth-child(' + (i+1) + ')');
-                    columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
-                    */
-                }
-                cloneHead.remove();
-            }, 0, false);
-        };
-
+    tables.directive('scrollingTable', function($timeout, $window, $compile, nzCssRuleEditor, tableService) {
         function calculateDimensions(wrapDiv) {
             var header = wrapDiv.find('thead');
             var body = wrapDiv.find("tbody");
@@ -87,6 +48,7 @@
 
         return {
             restrict: 'A',
+            scope: true,
             compile: function compile($element, attrs, transclude) {
                 var tableUUID = getUUID();
 
@@ -94,19 +56,16 @@
                 wrapper.attr('id', tableUUID);
 
                 var headWrap = $('<div class="tableHeader"><table></table></div>');
-                var headTable = $(headWrap.find('table')[0]);
                 var bodyWrap = $('<div class="scroller"><table></table></div>');
                 wrapper.append(headWrap).append(bodyWrap);
-
-                headTable.append(wrapper.find('thead'));
 
                 var headerTable = $(headWrap.find('table')[0]);
                 var dataTable =  $(bodyWrap.find('table')[0]);
                 $element.find('thead').each(function(index, elem) {
-                    headerTable.append(elem);
+                    $(elem).detach().appendTo(headerTable);
                 });
                 $element.find('tbody').each(function(index, elem) {
-                    dataTable.append(elem);
+                    $(elem).detach().appendTo(dataTable);
                 });
 
                 var maxHeight = $element.css('max-height');
@@ -119,9 +78,67 @@
                 $element.after(wrapper);
                 $element.remove();
 
+                // Regex strips illegal markup from element
+                //   which causes render failures in IE
+                var regexOnlyTagData = '<.*>';
+                var headerRows = wrapper.find('thead tr');
+                var headersElemArray = [];
+                headerRows.children().each(function(index, wrapper) {
+                    headersElemArray.push(wrapper.outerHTML.match(regexOnlyTagData)[0]);
+                });
+                $(headerRows[0]).empty();
+                $(headerRows[0]).append( $( headersElemArray.join('') ) );
+
+                var bodyRows = wrapper.find('tbody tr');
+                var bodyElemArray = [];
+                bodyRows.children().each(function(index, wrapper) {
+                    bodyElemArray.push(wrapper.outerHTML.match(regexOnlyTagData)[0]);
+                });
+                $(bodyRows[0]).empty();
+                $(bodyRows[0]).append( $( bodyElemArray.join('') ) );
+
                 return {
                     // Is run BEFORE child directives.
-                    pre: linker
+                    pre: function(scope, element, attrs) {
+                        var modelData = (attrs.data) ? attrs.data : 'data';
+                        scope.headersElemArray = headersElemArray;
+                        scope.bodyElemArray = bodyElemArray;
+
+                        var debounceId;
+                        var recalcFn = function() {
+                            $timeout.cancel(debounceId);
+                            debounceId = $timeout(function() {
+                                calculateDimensions(element);
+                            }, 25, false);
+                        };
+                        $($window).resize(function() {
+                            recalcFn();
+                        });
+                        scope.$watch(modelData, function() {
+                            recalcFn();
+                        });
+
+                    },
+                    post: function(scope, element, attrs) {
+                        var cloneHead = $(element.find('thead')[0]).clone();
+                        var allMinWidthHeaders = cloneHead.find('th');
+                        element.append(cloneHead.removeClass('tableHeader').addClass('minWidthHeaders'));
+
+                            var tableUUID = tableService.getIdOfContainingTable(element);
+
+                            for (var i=0; i < allMinWidthHeaders.length; i++) {
+                                var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i+1) + ')');
+                                columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
+                                var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .scroller td:nth-child(' + (i+1) + ')');
+                                columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
+                            }
+                            cloneHead.remove();
+
+                        $timeout(function() {
+                            var scroller = element.find('div.scroller');
+                            element.find('.tableHeader table').width("calc(100% - " + (scroller.width() - scroller.find('table').width()) + "px)");
+                        }, 0, false);
+                    }
                 }
             }
         };
