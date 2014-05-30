@@ -10,7 +10,7 @@ __Download:__
 * [Latest Successful Build] (http://ec2-54-186-51-9.us-west-2.compute.amazonaws.com:8080/job/ng-scrolling-table%20live%20demo/lastSuccessfulBuild/artifact/dist/ng-scrolling-table.tar.gz)
 
 __Example:__
-* [Live Example] (https://bcoffield.me/public/ng-scrolling-table/live/examples/)
+* [Live Example] (http://ng-scrolling-table.drakeserver.com/ng-scrolling-table%20live%20demo/examples/)
 
 __Contributors:__
 
