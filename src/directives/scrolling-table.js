@@ -9,7 +9,7 @@
 
     var tables = angular.module('table.scrolling-table', ['net.enzey.service.css.editor']);
 
-    tables.service('tableService', function() {
+    tables.service('stgTableService', function() {
         return {
             getIdOfContainingTable: function(element) {
                 var tableContainer = element.closest('.tableWrapper');
@@ -26,7 +26,7 @@
         }
     });
 
-    tables.directive('scrollingTable', function($timeout, $window, $compile, nzCssRuleEditor, tableService) {
+    tables.directive('stgScrollingTable', function($timeout, $window, $compile, nzCssRuleEditor, stgTableService) {
         function calculateDimensions(wrapDiv) {
             var header = wrapDiv.find('thead');
             var body = wrapDiv.find("tbody");
@@ -124,12 +124,12 @@
                         var allMinWidthHeaders = cloneHead.find('th');
                         element.append(cloneHead.removeClass('tableHeader').addClass('minWidthHeaders'));
 
-                            var tableUUID = tableService.getIdOfContainingTable(element);
+                            var tableUUID = stgTableService.getIdOfContainingTable(element);
 
                             for (var i=0; i < allMinWidthHeaders.length; i++) {
-                                var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i+1) + ')');
+                                var columnRule = nzCssRuleEditor.getCustomRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i+1) + ')');
                                 columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
-                                var columnRule = nzCssRuleEditor.getRule('#' + tableUUID + ' .scroller td:nth-child(' + (i+1) + ')');
+                                var columnRule = nzCssRuleEditor.getCustomRule('#' + tableUUID + ' .scroller td:nth-child(' + (i+1) + ')');
                                 columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
                             }
                             cloneHead.remove();

@@ -18,8 +18,8 @@
 
             <div style="margin-top: 3em;">5 Rows - 22 Columns</div>
             <table
-                data-scrolling-table
-                data-table-empty="No items found."
+                data-stg-scrolling-table
+                data-stg-table-empty="No items found."
                 style="width: 100%; max-height: 250px;">
                 <thead>
                     <tr>
@@ -77,60 +77,60 @@
 
             <div style="margin-top: 3em;">50 Rows - 22 Columns (hover over headers to highlight data columns)</div>
             <table
-                data-scrolling-table
-                data-table-selector data-multi-select
-                data-table-empty="No items found."
+                data-stg-scrolling-table
+                data-stg-table-selector data-multi-select
+                data-stg-table-empty="No items found."
                 style="width: 100%; max-height: 250px;">
                 <thead>
                     <tr>
-                        <th table-highlight-column data-column-sortable data-col="rate">Name</th>
-                        <th table-highlight-column width="100px">Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
-                        <th table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column data-column-sortable data-col="rate">Name</th>
+                        <th stg-table-highlight-column width="100px">Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
                     </tr>
                 </thead>
                 <tbody >
                     <tr data-ng-repeat="c in data | limitTo: 50 track by $index" >
-                        <td table-highlight-column>{{c.name}}</td>
-                        <td table-highlight-column width="100px">{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.name}}</td>
+                        <td stg-table-highlight-column width="100px">{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -138,12 +138,12 @@
             
             <div style="margin-top: 3em;">500 Rows</div>
             <table
-                data-scrolling-table
-                data-table-empty="No items found."
+                data-stg-scrolling-table
+                data-stg-table-empty="No items found."
                 style="width: 100%; max-height: 250px;">
                 <thead>
                     <tr>
-                        <th data-column-sortable data-col="rate">Name</th>
+                        <th data-stg-column-sortable data-col="rate">Name</th>
                         <th>Phone Number</th>
                     </tr>
                 </thead>

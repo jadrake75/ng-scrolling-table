@@ -1,14 +1,14 @@
 (function (angular) {
     'use strict';
     angular.module('ng-scrolling-table.mixins', [])
-    .constant('ControllerEvents', {
+    .constant('stgControllerEvents', {
         stateRequest: 'get-state',
         selection: 'selection',
         loadRequested: 'load-requested',
         loadFinished: 'load-finished',
         filter: 'filter'
     })
-    .factory('ControllerMixins', function (ControllerEvents) {
+    .factory('stgControllerMixins', function (stgControllerEvents) {
         $.extend(true, this, {
             filterable: function () {
                 return {
@@ -47,8 +47,8 @@
                         sort.asc = (sort.col === col ? !sort.asc : true);
                         sort.col = col;
                         var state = {};
-                        this.$emit(ControllerEvents.stateRequest, state);
-                        this.$emit(ControllerEvents.loadRequested, state);
+                        this.$emit(stgControllerEvents.stateRequest, state);
+                        this.$emit(stgControllerEvents.loadRequested, state);
                     },
                     clearSort: function () {
                         this.sort(null);
@@ -98,7 +98,7 @@
                         if (cleared.indexOf(row) < 0) { // select if not cleared
                             selectedRows.push(row);
                         }
-                        this.$emit(ControllerEvents.selection, selectedRows);
+                        this.$emit(stgControllerEvents.selection, selectedRows);
                         return cleared;
                     }
                 };
