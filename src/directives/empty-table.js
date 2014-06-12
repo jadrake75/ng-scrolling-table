@@ -3,7 +3,7 @@
     'use strict';
     
     angular.module('table.empty-table', [])
-        .directive('tableEmpty', function($timeout /*, ControllerEvents*/) {
+        .directive('stgTableEmpty', function($timeout /*, stgControllerEvents*/) {
         return {
             link: function(scope, el, attrs) {
                 var modelData = (attrs.data) ? attrs.data : 'data';
@@ -22,7 +22,7 @@
                             tr.hide();
                         }
                     });
-                    /*scope.$on(ControllerEvents.filter, function() {
+                    /*scope.$on(stgControllerEvents.filter, function() {
                         $timeout(function() {
                             var f_tr = body.find('tr');
                             if (f_tr.length > 0 && $(f_tr[0]).hasClass('empty-msg')) {

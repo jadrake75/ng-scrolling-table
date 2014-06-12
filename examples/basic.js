@@ -3,7 +3,7 @@
      'use strict';
      
     angular.module('examples', ['ng-scrolling-table.mixins', 'ng-scrolling-table'] )
-    .controller('BasicCtrl', function($scope, ControllerEvents) {
+    .controller('BasicCtrl', function($scope, stgControllerEvents) {
         
         $scope.currentSelection = [];
         $scope.data = [
@@ -16,7 +16,7 @@
             $scope.data.push( { 'name' : 'Person-' + i, 'phoneNumber': '553-223-2378' });
         }
         
-        $scope.$on(ControllerEvents.selection, function(evt, sRows) {
+        $scope.$on(stgControllerEvents.selection, function(evt, sRows) {
             $scope.currentSelection = sRows;
         });
         

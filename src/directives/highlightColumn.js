@@ -2,16 +2,16 @@
 
     'use strict';
 
-    var tables = angular.module('table.highlightColumn', []);
+    var tables = angular.module('table.highlightColumn', ['net.enzey.service.css.editor']);
 
-    tables.directive('tableHighlightColumn', function(nzCssRuleEditor, tableService) {
+    tables.directive('stgTableHighlightColumn', function(nzCssRuleEditor, stgTableService) {
         return {
             restrict: 'A',
             link: function(scope, element, attrs) {
-                var tableId = tableService.getIdOfContainingTable(element);
+                var tableId = stgTableService.getIdOfContainingTable(element);
                 if (tableId) {
                     var index = element.parent().children().toArray().indexOf(element[0]);
-                    var columnRule = nzCssRuleEditor.getRule('#' + tableId + ' .scroller td:nth-child(' + (index+1) + ')');
+                    var columnRule = nzCssRuleEditor.getCustomRule('#' + tableId + ' .scroller td:nth-child(' + (index+1) + ')');
                     $(element).mouseover(function() {
                         columnRule.backgroundColor = 'lightblue';
                     });

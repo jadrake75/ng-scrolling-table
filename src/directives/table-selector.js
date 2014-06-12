@@ -12,11 +12,11 @@
      * @param {type} $timeout
      * @returns {} The directive instance.
      */
-    .directive('tableSelector', function(ControllerMixins, $timeout) {
+    .directive('stgTableSelector', function(stgControllerMixins, $timeout) {
         return {
             link: function(scope, elm, attrs) {
                 var multiSelect = (typeof attrs.multiSelect !== 'undefined');
-                $.extend(true, scope, ControllerMixins.selectable(multiSelect));
+                $.extend(true, scope, stgControllerMixins.selectable(multiSelect));
                 elm.on('click', 'td', function(e) {
                     var row = $(e.currentTarget).closest('tr');
                     var index = row.index();
