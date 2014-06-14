@@ -20,7 +20,7 @@
             <table
                 data-stg-scrolling-table
                 data-stg-table-empty="No items found."
-                style="width: 100%; max-height: 250px;">
+                style="width: 100%; ">
                 <thead>
                     <tr>
                         <th data-column-sortable data-col="rate">Name</th>
@@ -48,7 +48,7 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr data-ng-repeat="c in data | limitTo: 1 track by $index" >
+                    <tr data-ng-repeat="c in data | limitTo: 5 track by $index" >
                         <td>{{c.name}}</td>
                         <td>{{c.phoneNumber.slice(0, 2)}}</td>
                         <td width="100px">{{c.phoneNumber.slice(0, 2)}}</td>

@@ -39,6 +39,12 @@
             return ($window.navigator.userAgent.indexOf('MSIE') !== -1 || $window.navigator.appVersion.indexOf('Trident/') > 0);
         }
 
+        function calculateScrollerHeight(tableWrapper) {
+            var scroller = tableWrapper.find('.scroller');
+            var thHeight = tableWrapper.find('.tableHeader').height();
+            scroller.css('max-height', (tableWrapper.height() - thHeight) + "px");
+        }
+
         function calculateWidths(table) {
             var body = table.find("tbody");
             var scroller = body.parents("div.scroller")[0];
@@ -88,7 +94,8 @@
                 if( (!maxHeight || maxHeight === 'none') && attrs.height ) {
                     maxHeight = attrs.height + 'px';
                 }
-                wrapper.find('.scroller').css('max-height', maxHeight);
+                wrapper.css('max-height', maxHeight);
+                wrapper.css('height', maxHeight);
                 $element.css('max-height', 0);
 
                 $element.after(wrapper);
@@ -139,18 +146,24 @@
                         var cloneHead = $(element.find('thead')[0]).clone();
                         var allMinWidthHeaders = cloneHead.find('th');
                         element.append(cloneHead.removeClass('tableHeader').addClass('minWidthHeaders'));
+                        var tableUUID = stgTableService.getIdOfContainingTable(element);
+                        for (var i = 0; i < allMinWidthHeaders.length; i++) {
+                            var columnRule = nzCssRuleEditor.getCustomRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i + 1) + ')');
+                            columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
+                            var columnRule = nzCssRuleEditor.getCustomRule('#' + tableUUID + ' .scroller td:nth-child(' + (i + 1) + ')');
+                            columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
+                        }
+                        cloneHead.remove();
+                        var debounceId;
+                        element.resize(function() {
+                            $timeout.cancel(debounceId);
+                            debounceId = $timeout(function() {
+                                calculateScrollerHeight(element);
+                            }, 50, false);
 
-                            var tableUUID = stgTableService.getIdOfContainingTable(element);
-
-                            for (var i=0; i < allMinWidthHeaders.length; i++) {
-                                var columnRule = nzCssRuleEditor.getCustomRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i+1) + ')');
-                                columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
-                                var columnRule = nzCssRuleEditor.getCustomRule('#' + tableUUID + ' .scroller td:nth-child(' + (i+1) + ')');
-                                columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
-                            }
-                            cloneHead.remove();
-
+                        });
                         $timeout(function() {
+                            calculateScrollerHeight(element);
                             var scroller = element.find('div.scroller');
                             element.find('.tableHeader table').width("calc(100% - " + (scroller.width() - scroller.find('table').width()) + "px)");
                         }, 0, false);
