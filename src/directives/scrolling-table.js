@@ -23,25 +23,41 @@
                     return tableContainer[0].id;
                 }
             }
-        }
+        };
     });
 
     tables.directive('stgScrollingTable', function($timeout, $window, $compile, nzCssRuleEditor, stgTableService) {
+
         function calculateDimensions(wrapDiv) {
             var header = wrapDiv.find('thead');
-            var body = wrapDiv.find("tbody");
             var h = header.find('tr').height();
             h = (h > 0) ? h : 25;
             calculateWidths(wrapDiv);
         }
 
+        function isIE() {
+            return ($window.navigator.userAgent.indexOf('MSIE') !== -1 || $window.navigator.appVersion.indexOf('Trident/') > 0);
+        }
+
         function calculateWidths(table) {
-            var allBodyCols = table.find('tbody tr:first td');
+            var body = table.find("tbody");
+            var scroller = body.parents("div.scroller")[0];
+            var scrollerWidth = 18; // reasonable default
+            var scrollBarVisible = ( scroller.scrollHeight > scroller.clientHeight );
+            if( scrollBarVisible ) {
+                scrollerWidth = $(scroller).outerWidth() - body[0].clientWidth;
+            }
+            var allBodyCols = body.find('tr:first td');
             if (allBodyCols.length > 0) {
                 table.find('.tableHeader th').each(function(index) {
                     var padding = 0;
                     var desiredWidth = $(allBodyCols[index]).width();
-                    $(this).css('width', desiredWidth);
+                    if( index === allBodyCols.length -1 && scrollBarVisible ) {
+                        desiredWidth = +desiredWidth + scrollerWidth;
+                    } else {
+                        desiredWidth += ($window.chrome || isIE()) ? 1 : 0;
+                    }
+                    $(this).width(desiredWidth);
                 });
             }
         }

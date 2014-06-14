@@ -30,7 +30,18 @@
                         if (!isSelected) {
                             row.addClass('selected');
                         }
-                        scope.selectRow(index);
+                        var cleared = scope.selectRow(index);
+                        if( cleared.length > 0 ) {
+                            var rows = row.closest('tbody').find('tr.selected');
+                            angular.forEach( cleared, function(clearingRow) {
+                                angular.forEach( rows, function(r) {
+                                   var _r = $(r);
+                                   if(_r.index() === clearingRow) {
+                                       _r.removeClass('selected');
+                                   }; 
+                                });
+                            });
+                        }
                     }, 0, false);
                 });
                 elm.on('$destroy', function() {
