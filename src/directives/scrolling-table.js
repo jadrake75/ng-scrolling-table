@@ -130,7 +130,7 @@
                         $($window).resize(function() {
                             recalcFn();
                         });
-                        scope.$watch(modelData, function() {
+                        scope.$watchCollection(modelData, function() {
                             recalcFn();
                         });
 
