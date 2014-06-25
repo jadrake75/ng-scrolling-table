@@ -9,24 +9,7 @@
 
     var tables = angular.module('table.scrolling-table', ['net.enzey.service.css.editor']);
 
-    tables.service('stgTableService', function() {
-        return {
-            getIdOfContainingTable: function(element) {
-                var tableContainer = element.closest('.tableWrapper');
-                if (tableContainer && tableContainer[0]) {
-                    return tableContainer[0].id;
-                }
-
-                // The element with the directive was passed.
-                tableContainer = element.find('.tableWrapper');
-                if (tableContainer && tableContainer.length === 1) {
-                    return tableContainer[0].id;
-                }
-            }
-        };
-    });
-
-    tables.directive('stgScrollingTable', function($timeout, $window, $compile, nzCssRuleEditor, stgTableService) {
+    tables.directive('stgScrollingTable', function($timeout, $window, $compile, nzCssRuleEditor) {
 
         function calculateDimensions(wrapDiv) {
             var header = wrapDiv.find('thead');
@@ -72,10 +55,7 @@
             restrict: 'A',
             scope: true,
             compile: function compile($element, attrs, transclude) {
-                var tableUUID = getUUID();
-
                 var wrapper = $('<div class="tableWrapper"></div>');
-                wrapper.attr('id', tableUUID);
 
                 var headWrap = $('<div class="tableHeader"><table></table></div>');
                 var bodyWrap = $('<div class="scroller"><table></table></div>');
@@ -130,6 +110,9 @@
                 return {
                     // Is run BEFORE child directives.
                     pre: function(scope, element, attrs) {
+                        scope.tableUUID = getUUID();
+                        wrapper.attr('id', scope.tableUUID);
+
                         var modelData = (attrs.data) ? attrs.data : 'data';
                         scope.headersElemArray = headersElemArray;
                         scope.bodyElemArray = bodyElemArray;
@@ -153,11 +136,10 @@
                         var cloneHead = $(element.find('thead')[0]).clone();
                         var allMinWidthHeaders = cloneHead.find('th');
                         element.append(cloneHead.removeClass('tableHeader').addClass('minWidthHeaders'));
-                        var tableUUID = stgTableService.getIdOfContainingTable(element);
                         for (var i = 0; i < allMinWidthHeaders.length; i++) {
-                            var columnRule = nzCssRuleEditor.getCustomRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i + 1) + ')');
+                            var columnRule = nzCssRuleEditor.getCustomRule('#' + scope.tableUUID + ' .tableHeader th:nth-child(' + (i + 1) + ')');
                             columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
-                            var columnRule = nzCssRuleEditor.getCustomRule('#' + tableUUID + ' .scroller td:nth-child(' + (i + 1) + ')');
+                            var columnRule = nzCssRuleEditor.getCustomRule('#' + scope.tableUUID + ' .scroller td:nth-child(' + (i + 1) + ')');
                             columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
                         }
                         cloneHead.remove();
