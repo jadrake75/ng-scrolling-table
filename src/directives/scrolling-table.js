@@ -81,14 +81,13 @@
                 var bodyWrap = $('<div class="scroller"><table></table></div>');
                 wrapper.append(headWrap).append(bodyWrap);
 
-                var headerTable = $(headWrap.find('table')[0]);
-                var dataTable =  $(bodyWrap.find('table')[0]);
-                $element.find('thead').each(function(index, elem) {
-                    $(elem).detach().appendTo(headerTable);
-                });
-                $element.find('tbody').each(function(index, elem) {
-                    $(elem).detach().appendTo(dataTable);
-                });
+                var moveRowsToDifferentTable = function(oldLocation, newElem) {
+                    $element.find( oldLocation ).each(function(index, elem) {
+                        $(elem).detach().appendTo(newElem);
+                    });
+                };
+                moveRowsToDifferentTable('thead', $(headWrap.find('table')[0]));
+                moveRowsToDifferentTable('tbody', $(bodyWrap.find('table')[0]));
 
                 var maxHeight = $element.css('max-height');
                 if( (!maxHeight || maxHeight === 'none') && attrs.height ) {
@@ -104,21 +103,29 @@
                 // Regex strips illegal markup from element
                 //   which causes render failures in IE
                 var regexOnlyTagData = '<.*>';
-                var headerRows = wrapper.find('thead tr');
-                var headersElemArray = [];
-                headerRows.children().each(function(index, wrapper) {
-                    headersElemArray.push(wrapper.outerHTML.match(regexOnlyTagData)[0]);
-                });
-                $(headerRows[0]).empty();
-                $(headerRows[0]).append( $( headersElemArray.join('') ) );
 
+                var headerRows = wrapper.find('thead tr');
                 var bodyRows = wrapper.find('tbody tr');
-                var bodyElemArray = [];
-                bodyRows.children().each(function(index, wrapper) {
-                    bodyElemArray.push(wrapper.outerHTML.match(regexOnlyTagData)[0]);
+
+                var getAttributes = function(element) {
+                    var attrs = {};
+                    for (var i=0; i < element.attributes.length; i++) {
+                        attrs[element.attributes[i].name] = element.attributes[i].value;
+                    }
+                    return attrs;
+                };
+                var headerTrAttrs = getAttributes(headerRows[0]);
+                var bodyTrAttrs =   getAttributes(bodyRows[0]);
+
+                var headersElemArray = [];
+                headerRows.children().each(function(index, elem) {
+                    headersElemArray.push(elem.outerHTML.match(regexOnlyTagData)[0]);
                 });
-                $(bodyRows[0]).empty();
-                $(bodyRows[0]).append( $( bodyElemArray.join('') ) );
+
+                var bodyElemArray = [];
+                bodyRows.children().each(function(index, elem) {
+                    bodyElemArray.push(elem.outerHTML.match(regexOnlyTagData)[0]);
+                });
 
                 return {
                     // Is run BEFORE child directives.
@@ -154,14 +161,30 @@
                             columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
                         }
                         cloneHead.remove();
+
                         var debounceId;
                         element.resize(function() {
                             $timeout.cancel(debounceId);
                             debounceId = $timeout(function() {
                                 calculateScrollerHeight(element);
                             }, 50, false);
-
                         });
+
+                        var rebuild = function(elemType, elemAttrs, childElemArray) {
+                            var elem = wrapper.find(elemType);
+                            elem.empty();
+                            var newElem = angular.element('<tr></tr>');
+                            Object.keys(elemAttrs).forEach(function(key) {
+                                newElem.attr(key, elemAttrs[key]);
+                            });
+                            newElem.append( $( childElemArray.join('') ) );
+                            elem.append( $compile(newElem)(scope) );
+                        };
+                        scope.rebuildTable = function() {
+                            rebuild('tbody', bodyTrAttrs, scope.bodyElemArray);
+                            rebuild('thead', headerTrAttrs, scope.headersElemArray);
+                        };
+
                         $timeout(function() {
                             calculateScrollerHeight(element);
                             var scroller = element.find('div.scroller');
