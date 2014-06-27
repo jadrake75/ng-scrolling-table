@@ -11,6 +11,7 @@ __Download:__
 
 __Example:__
 * [Live Example] (http://ng-scrolling-table.drakeserver.com/ng-scrolling-table%20live%20demo/examples/)
+* [Live Example (GitHub)] (http://jadrake75.github.io/ng-scrolling-table/)
 
 __Contributors:__
 
