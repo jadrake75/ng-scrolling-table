@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html ng-app="examples">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../dist/ng-scrolling-table.css"/>
+        <style>
+            [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+                display: none !important;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div ng-cloak ng-controller="BasicCtrl">
+
+            <div style="margin-top: 3em;">5 Rows - 22 Columns</div>
+            <table
+                data-stg-scrolling-table
+                data-stg-table-empty="No items found."
+                style="width: 100%; ">
+                <thead>
+                    <tr>
+                        <th data-column-sortable data-col="rate">Name</th>
+                        <th>Phone Number</th>
+                        <th width="100px">Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr data-ng-repeat="c in data | limitTo: 5 track by $index" >
+                        <td>{{c.name}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td width="100px">{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 3em;">50 Rows - 22 Columns (hover over headers to highlight data columns)</div>
+            <table
+                data-stg-scrolling-table
+                data-stg-table-selector data-multi-select
+                data-stg-table-empty="No items found."
+                style="width: 100%; max-height: 250px;">
+                <thead>
+                    <tr>
+                        <th stg-table-highlight-column data-column-sortable data-col="rate">Name</th>
+                        <th stg-table-highlight-column width="100px">Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                        <th stg-table-highlight-column>Phone Number</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr data-ng-repeat="c in data | limitTo: 50 track by $index" >
+                        <td stg-table-highlight-column>{{c.name}}</td>
+                        <td stg-table-highlight-column width="100px">{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            
+            <div style="margin-top: 3em;">500 Rows</div>
+            <table
+                data-stg-scrolling-table
+                data-stg-table-empty="No items found."
+                style="width: 100%; max-height: 250px;">
+                <thead>
+                    <tr>
+                        <th data-stg-column-sortable data-col="rate">Name</th>
+                        <th>Phone Number</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr data-ng-repeat="c in data | limitTo: 500 track by $index" >
+                        <td>{{c.name}}</td>
+                        <td>{{c.phoneNumber}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.8/angular.js"></script>
+        <script src="lib/CSSRuleEditor.js"></script>
+        <script src="dist/ng-scrolling-table.js"></script>
+        <script src="basic.js"></script>
+        
+    </body>
+</html>
