@@ -154,6 +154,26 @@
                     </tr>
                 </tbody>
             </table>
+            
+            <div style="margin-top: 3em;">Empty Table Test</div>
+            <table
+                data-stg-scrolling-table
+                data-stg-table-empty="No items found."
+                data-data="emptyValues"
+                style="width: 100%; max-height: 250px;">
+                <thead>
+                    <tr>
+                        <th data-stg-column-sortable data-col="rate">Name</th>
+                        <th>Phone Number</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr data-ng-repeat="c in emptyValues | limitTo: 10 track by $index" >
+                        <td>{{c.name}}</td>
+                        <td>{{c.phoneNumber}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         

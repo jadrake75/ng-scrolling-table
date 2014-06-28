@@ -28,6 +28,19 @@
                 background-color: @color-table-selected-background;
             }
         }
+        .empty-msg {
+            div {
+                padding: 5px 10px;
+                font-size: @table-font-size;
+                font-style: italic;
+                &::selector {
+                    background: none;
+                } 
+            }
+            &:hover {
+                background-color: transparent;
+            }
+        }
     }
 
     .tableHeader {
