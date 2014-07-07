@@ -6,6 +6,18 @@
     var getUUID = function() {
         return 'scrollingTable-' + UUID++;
     };
+    
+    var guid = (function() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+        }
+        return function() {
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                    s4() + '-' + s4() + s4() + s4();
+        };
+    })();
 
     var tables = angular.module('table.scrolling-table', ['net.enzey.service.css.editor']);
 
@@ -26,8 +38,25 @@
         };
     });
 
-    tables.directive('stgScrollingTable', function($timeout, $window, $compile, nzCssRuleEditor, stgTableService) {
+    tables.directive('stgScrollingTable', function($timeout, $window, $compile, nzCssRuleEditor, stgTableService, stgAttributes) {
 
+        /**
+         * Will ensure that each table row has reference attribute as defined by the refIdAttribute.
+         * If no attribute is found, a new guid will be generated and inserted.
+         * 
+         * @param {type} content The current table content   
+         * @param {type} refIdAttribute  The reference ID attribute
+         */
+        function ensureRowIds(content, refIdAttribute) {
+            var trs = content.find('tbody tr');
+            trs.each(function(index, trElem) {
+                var tr = $(trElem);
+                if( tr.attr && tr.attr(refIdAttribute) === undefined ) {
+                   tr.attr(refIdAttribute, guid());
+                }
+            });
+        }
+        
         function calculateDimensions(wrapDiv) {
             var header = wrapDiv.find('thead');
             var h = header.find('tr').height();
@@ -73,7 +102,7 @@
             scope: true,
             compile: function compile($element, attrs, transclude) {
                 var tableUUID = getUUID();
-
+               
                 var wrapper = $('<div class="tableWrapper"></div>');
                 wrapper.attr('id', tableUUID);
 
@@ -143,6 +172,7 @@
 
                     },
                     post: function(scope, element, attrs) {
+                        var refIdAttribute = ( typeof attrs.refId !== 'undefined' ) ? attrs.refId : stgAttributes.refId;
                         var cloneHead = $(element.find('thead')[0]).clone();
                         var allMinWidthHeaders = cloneHead.find('th');
                         element.append(cloneHead.removeClass('tableHeader').addClass('minWidthHeaders'));
@@ -153,7 +183,7 @@
                             var columnRule = nzCssRuleEditor.getCustomRule('#' + tableUUID + ' .scroller td:nth-child(' + (i + 1) + ')');
                             columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
                         }
-                        cloneHead.remove();
+                        cloneHead.remove();  
                         var debounceId;
                         element.resize(function() {
                             $timeout.cancel(debounceId);
@@ -165,7 +195,9 @@
                         $timeout(function() {
                             calculateScrollerHeight(element);
                             var scroller = element.find('div.scroller');
+                            ensureRowIds(scroller, refIdAttribute);
                             element.find('.tableHeader table').width("calc(100% - " + (scroller.width() - scroller.find('table').width()) + "px)");
+                            
                         }, 0, false);
                     }
                 }

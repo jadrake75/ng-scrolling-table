@@ -1,6 +1,9 @@
 (function (angular) {
     'use strict';
     angular.module('ng-scrolling-table.mixins', [])
+    .constant('stgAttributes', {
+        refId: 'ref-id'
+    })
     .constant('stgControllerEvents', {
         stateRequest: 'get-state',
         selection: 'selection',
@@ -81,13 +84,13 @@
                     getSelected: function () {
                         return this.tableModel.selectedRows;
                     },
-                    selectRow: function (row) {
+                    selectRow: function (id) {
                         var selectedRows = this.tableModel.selectedRows;
                         var cleared = [];
-                        var i = selectedRows.indexOf(row);
+                        var i = selectedRows.indexOf(id);
                         if (i >= 0) { // remove row selected
                             selectedRows.splice(i, 1);
-                            cleared.push(row);
+                            cleared.push(id);
                         }
                         if (!multiple) { // clear all rows
                             angular.forEach(selectedRows, function (item) {
@@ -95,8 +98,8 @@
                             });
                             selectedRows.length = 0;
                         }
-                        if (cleared.indexOf(row) < 0) { // select if not cleared
-                            selectedRows.push(row);
+                        if (cleared.indexOf(id) < 0) { // select if not cleared
+                            selectedRows.push(id);
                         }
                         this.$emit(stgControllerEvents.selection, selectedRows);
                         return cleared;
