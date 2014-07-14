@@ -17,6 +17,7 @@
         
         td {
             border: @table-border-tablecell;
+            overflow: hidden;
         }
         tr {
             display: table-row;
@@ -44,12 +45,8 @@
     }
 
     .tableHeader {
-        width: 100%;
         overflow: hidden;
         .gradient(@color-gradient-light, @color-gradient-dark, @color-gradient-light);
-        table {
-            table-layout: fixed;
-        }
         tr {
             background-color: transparent;
             border: 1px @color-border-highlight solid;
@@ -58,6 +55,7 @@
                 font-weight: normal;
                 .user-select(none);
                 border-left: @table-border-tablecell;
+                overflow: hidden;
                 &:first-child {
                     border-left: none;
                 }
@@ -72,7 +70,7 @@
         border-collapse: collapse;
         border-spacing: 0;
         width: 100%;
-        table-layout: auto;
+        table-layout: fixed;
     }
     tr {
         background-color: @color-table-oddRow;
@@ -94,8 +92,5 @@
     height: 1px;
     overflow: hidden;
     position: absolute;
-    table {
-        table-layout: auto;
-    }
 }
 
