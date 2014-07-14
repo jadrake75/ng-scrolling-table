@@ -2,11 +2,6 @@
 
     'use strict';
 
-    var UUID = 0;
-    var getUUID = function() {
-        return 'scrollingTable-' + UUID++;
-    };
-    
     var guid = (function() {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)
@@ -14,7 +9,7 @@
                     .substring(1);
         }
         return function() {
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            return 's' + s4() + s4() + '-' + s4() + '-' + s4() + '-' +
                     s4() + '-' + s4() + s4() + s4();
         };
     })();
@@ -56,13 +51,6 @@
                 }
             });
         }
-        
-        function calculateDimensions(wrapDiv) {
-            var header = wrapDiv.find('thead');
-            var h = header.find('tr').height();
-            h = (h > 0) ? h : 25;
-            calculateWidths(wrapDiv);
-        }
 
         function isIE() {
             return ($window.navigator.userAgent.indexOf('MSIE') !== -1 || $window.navigator.appVersion.indexOf('Trident/') > 0);
@@ -74,37 +62,42 @@
             scroller.css('max-height', (tableWrapper.height() - thHeight) + "px");
         }
 
-        function calculateWidths(table) {
-            var body = table.find("tbody");
-            var scroller = body.parents("div.scroller")[0];
-            var scrollerWidth = 18; // reasonable default
-            var scrollBarVisible = ( scroller.scrollHeight > scroller.clientHeight );
-            if( scrollBarVisible ) {
-                scrollerWidth = $(scroller).outerWidth() - body[0].clientWidth;
-            }
-            var allBodyCols = body.find('tr:first td');
-            if (allBodyCols.length > 0) {
-                table.find('.tableHeader th').each(function(index) {
-                    var padding = 0;
-                    var desiredWidth = $(allBodyCols[index]).width();
-                    if( index === allBodyCols.length -1 && scrollBarVisible ) {
-                        desiredWidth = +desiredWidth + scrollerWidth;
-                    } else {
-                        desiredWidth += ($window.chrome || isIE()) ? 1 : 0;
+        /**
+         * Configures the column groups for both the table header and table body
+         * tables.  If a column group is present on the header it will be used.
+         * However, if one is generated it will set the widths of any existing 
+         * width attributes on the TH elements on the COL elements and remove the 
+         * explicit widths from any TH and/or TD cells.
+         */
+        function handleColGroups($element, headerTable, dataTable, thead, tbody) {
+            var colGroup = $element.find('colgroup').first();
+            if (colGroup.length === 0) {
+                colGroup = $('<colgroup></colgroup>');
+                thead.find('th').each(function(index, elem) {
+                    var el = $(elem);
+                    var w = null;
+                    if (el.attr("width") !== undefined) { // explicit width handling
+                        w = el.attr("width");
+                        el.removeAttr("width");
+                        tbody.find("td:nth-child(" + (index + 1) + ")").removeAttr("width");
                     }
-                    $(this).width(desiredWidth);
+                    colGroup.append("<col " + ((w !== null) ? "width=\"" + w + "\"" : "") + "/>");
                 });
+                colGroup.appendTo(headerTable);
+            } else {
+                colGroup.detach().appendTo(headerTable);
             }
+            colGroup.clone().appendTo(dataTable);
+            
         }
 
         return {
             restrict: 'A',
             scope: true,
             compile: function compile($element, attrs, transclude) {
-                var tableUUID = getUUID();
                
                 var wrapper = $('<div class="tableWrapper"></div>');
-                wrapper.attr('id', tableUUID);
+                wrapper.attr('id', guid());
 
                 var headWrap = $('<div class="tableHeader"><table></table></div>');
                 var bodyWrap = $('<div class="scroller"><table></table></div>');
@@ -112,10 +105,13 @@
 
                 var headerTable = $(headWrap.find('table')[0]);
                 var dataTable =  $(bodyWrap.find('table')[0]);
-                $element.find('thead').each(function(index, elem) {
+                var thead = $element.find('thead');
+                var tbody = $element.find('tbody');
+                handleColGroups($element, headerTable, dataTable, thead, tbody);
+                thead.each(function(index, elem) {
                     $(elem).detach().appendTo(headerTable);
                 });
-                $element.find('tbody').each(function(index, elem) {
+                tbody.each(function(index, elem) {
                     $(elem).detach().appendTo(dataTable);
                 });
 
@@ -152,24 +148,8 @@
                 return {
                     // Is run BEFORE child directives.
                     pre: function(scope, element, attrs) {
-                        var modelData = (attrs.data) ? attrs.data : 'data';
                         scope.headersElemArray = headersElemArray;
                         scope.bodyElemArray = bodyElemArray;
-
-                        var debounceId;
-                        var recalcFn = function() {
-                            $timeout.cancel(debounceId);
-                            debounceId = $timeout(function() {
-                                calculateDimensions(element);
-                            }, 25, false);
-                        };
-                        $($window).resize(function() {
-                            recalcFn();
-                        });
-                        scope.$watchCollection(modelData, function() {
-                            recalcFn();
-                        });
-
                     },
                     post: function(scope, element, attrs) {
                         var refIdAttribute = ( typeof attrs.refId !== 'undefined' ) ? attrs.refId : stgAttributes.refId;
@@ -196,8 +176,7 @@
                             calculateScrollerHeight(element);
                             var scroller = element.find('div.scroller');
                             ensureRowIds(scroller, refIdAttribute);
-                            element.find('.tableHeader table').width("calc(100% - " + (scroller.width() - scroller.find('table').width()) + "px)");
-                            
+                            element.find('.tableHeader').css("padding-right",(scroller.width() - scroller.find('table').width()) + "px");
                         }, 0, false);
                     }
                 }
