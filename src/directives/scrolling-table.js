@@ -166,7 +166,6 @@
                         for (var i = 0; i < allMinWidthHeaders.length; i++) {
                             var width = $(allMinWidthHeaders[i]).width() + 'px';
                             $('#' + tableUUID + ' .tableHeader th:nth-child(' + (i + 1) + ')').css("minWidth", width);
-                            $('#' + tableUUID + ' .scroller td:nth-child(' + (i + 1) + ')').css("minWidth", width);
                         }
                         cloneHead.remove();  
                         var debounceId;

@@ -141,7 +141,7 @@
             </table>
             
             
-            <div style="margin-top: 3em;">500 Rows with Column Resizing</div>
+            <div style="margin-top: 3em;">{{data.length}} Rows with Column Resizing</div>
             <table
                 data-stg-scrolling-table
                 data-stg-table-empty="No items found."
@@ -158,12 +158,13 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr data-ng-repeat="c in data | limitTo: 500 track by $index" >
+                    <tr data-ng-repeat="c in data track by $index" >
                         <td>{{c.name}}</td>
                         <td>{{c.phoneNumber}}</td>
                     </tr>
                 </tbody>
             </table>
+            <button ng-click="addRow()">Add row</button>
             
             <div style="margin-top: 3em;">Empty Table Test</div>
             <table
