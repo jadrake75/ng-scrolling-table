@@ -83,58 +83,59 @@
             <table
                 data-stg-scrolling-table
                 data-stg-table-selector data-multi-select="true"
+                data-stg-enable-column-resizing
                 data-stg-table-empty="No items found."
                 style="width: 100%; max-height: 250px;">
                 <thead>
                     <tr>
-                        <th stg-table-highlight-column data-column-sortable data-col="rate" width="250px">Name</th>
-                        <th stg-table-highlight-column width="100px">Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
+                        <th data-column-sortable data-col="rate" width="250px">Name</th>
+                        <th width="100px">Phone Number</th>
+                        <th data-stg-highlight-column>Phone Number</th>
+                        <th data-stg-highlight-column>Phone Number</th>
+                        <th data-stg-highlight-column>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
                     </tr>
                 </thead>
                 <tbody >
                     <tr data-ng-repeat="c in data | limitTo: 50 track by $index" >
-                        <td stg-table-highlight-column>{{c.name}}</td>
-                        <td stg-table-highlight-column width="100px">{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.name}}</td>
+                        <td width="100px">{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -146,6 +147,10 @@
                 data-stg-table-empty="No items found."
                 data-stg-enable-column-resizing
                 style="width: 100%; max-height: 250px;">
+                <colgroup>
+                    <col data-stg-highlight-column/>
+                    <col/>
+                </colgroup>
                 <thead>
                     <tr>
                         <th data-stg-column-sortable data-col="rate">Name</th>
@@ -184,8 +189,6 @@
         
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.8/angular.js"></script>
-        <script src="https://rawgithub.com/keeganstreet/specificity/master/specificity.js"></script>
-        <script src="https://rawgithub.com/EnzeyNet/CSSRuleEditor/master/src/CSSRuleEditor.js"></script>
         <script src="../dist/ng-scrolling-table.js"></script>
         <script src="basic.js"></script>
         

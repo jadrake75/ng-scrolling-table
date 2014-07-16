@@ -31,7 +31,7 @@
                             elm.attr(stgAttributes.columnFixed) !== "true" ) {
                         elm.css("cursor", "col-resize");
                     } else {
-                        elm.css("cursor", "default");
+                        elm.css("cursor","");
                     }
                 });
                 // Look for a mouse down event occuring near the TH's boundary.
@@ -46,8 +46,10 @@
                     }
                     var x = evt.screenX;
                     var current = $(evt.currentTarget);
+                    var cursor = $("body").css("cursor");
                     // Add mouse move if the target is eligible for drag
                     current.mousemove(function(evtUp){ 
+                        $("body").css("cursor", "col-resize");
                         var delta = evtUp.screenX - x;
                         x = evtUp.screenX;
                         var w_x = target.outerWidth() + delta;
@@ -60,6 +62,7 @@
                         
                     });
                     current.mouseup(function(evt2) {
+                        $("body").css("cursor", cursor);
                         current.off("mousemove");
                         current.off("mouseup");
                     });

@@ -14,7 +14,7 @@
         };
     })();
 
-    var tables = angular.module('table.scrolling-table', ['net.enzey.service.css.editor']);
+    var tables = angular.module('table.scrolling-table', []);
 
     tables.service('stgTableService', function() {
         return {
@@ -33,7 +33,7 @@
         };
     });
 
-    tables.directive('stgScrollingTable', function($timeout, $window, $document, $compile, nzCssRuleEditor, stgTableService, stgAttributes) {
+    tables.directive('stgScrollingTable', function($timeout, $window, $document, stgTableService, stgAttributes) {
 
         /**
          * Will ensure that each table row has reference attribute as defined by the refIdAttribute.
@@ -164,10 +164,9 @@
                         element.append(cloneHead.removeClass('tableHeader').addClass('minWidthHeaders'));
                         var tableUUID = stgTableService.getIdOfContainingTable(element);
                         for (var i = 0; i < allMinWidthHeaders.length; i++) {
-                            var columnRule = nzCssRuleEditor.getCustomRule('#' + tableUUID + ' .tableHeader th:nth-child(' + (i + 1) + ')');
-                            columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
-                            var columnRule = nzCssRuleEditor.getCustomRule('#' + tableUUID + ' .scroller td:nth-child(' + (i + 1) + ')');
-                            columnRule.minWidth = $(allMinWidthHeaders[i]).width() + 'px';
+                            var width = $(allMinWidthHeaders[i]).width() + 'px';
+                            $('#' + tableUUID + ' .tableHeader th:nth-child(' + (i + 1) + ')').css("minWidth", width);
+                            $('#' + tableUUID + ' .scroller td:nth-child(' + (i + 1) + ')').css("minWidth", width);
                         }
                         cloneHead.remove();  
                         var debounceId;
