@@ -18,6 +18,10 @@
         td {
             border: @table-border-tablecell;
             overflow: hidden;
+            &.column-highlight {
+                background-color: darken(@color-highlight-hover, 7%);
+                border-color: darken(@color-highlight-hover, 2%);
+            }
         }
         tr {
             display: table-row;
