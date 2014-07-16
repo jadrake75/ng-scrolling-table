@@ -57,7 +57,12 @@
                     var observer = null;
                     var index = element.parent().children().toArray().indexOf(element[0]);
                     if (index !== undefined) {
-                        observer = trackNewInsertions(tableId, index);
+                        $timeout(function() {
+                            var tds = $("#" + tableId + " td:nth-child(" + (index+1) + ")");
+                            addListeners(tds);
+                            observer = trackNewInsertions(tableId, index);
+                        }, 0, false);
+                        
                     }
                     scope.$on('$destroy', function() {
                         if (observer !== null) {
