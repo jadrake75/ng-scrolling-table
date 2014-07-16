@@ -33,7 +33,7 @@
         };
     });
 
-    tables.directive('stgScrollingTable', function($timeout, $window, $compile, nzCssRuleEditor, stgTableService, stgAttributes) {
+    tables.directive('stgScrollingTable', function($timeout, $window, $document, $compile, nzCssRuleEditor, stgTableService, stgAttributes) {
 
         /**
          * Will ensure that each table row has reference attribute as defined by the refIdAttribute.
@@ -76,6 +76,12 @@
                 thead.find('th').each(function(index, elem) {
                     var el = $(elem);
                     var w = null;
+                    if( elem.className !== '') {  // if classes are defined attempt to calculate width
+                        var elm = el.clone();
+                        $($document[0].body).append(elm);
+                        w = elm.css("width");
+                        elm.remove();
+                    }
                     if (el.attr("width") !== undefined) { // explicit width handling
                         w = el.attr("width");
                         el.removeAttr("width");

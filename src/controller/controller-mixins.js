@@ -1,8 +1,9 @@
-(function(angular) {
+(function(angular, $) {
     'use strict';
     angular.module('ng-scrolling-table.mixins', [])
             .constant('stgAttributes', {
-                refId: 'ref-id'
+                refId: 'ref-id',
+                columnFixed: 'column-fixed'
             })
             .constant('stgControllerEvents', {
                 stateRequest: 'get-state',
@@ -11,6 +12,7 @@
                 loadFinished: 'load-finished',
                 filter: 'filter'
             })
+            // TODO: This will be moved to controllers for the directives
             .factory('stgControllerMixins', function(stgControllerEvents) {
                 $.extend(true, this, {
                     filterable: function() {
@@ -72,4 +74,4 @@
                 return this;
             });
 
-})(angular);
+})(angular, jQuery);
