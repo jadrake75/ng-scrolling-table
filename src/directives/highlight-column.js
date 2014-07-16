@@ -6,7 +6,6 @@
 
     tables.directive('stgHighlightColumn', function($timeout, $log, stgTableService) {
 
-
         /**
          * Track new insertions of TRs into the TBODY and specify for the
          * column TDs the listeners to bind.
@@ -16,33 +15,39 @@
          * @returns {undefined}
          */
         function trackNewInsertions(tableId, index) {
-            var target = $("#" + tableId + " tbody")[0];
-            var observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
-                        angular.forEach(mutation.addedNodes, function(node) {
-                            if (node.tagName === "TR") {
-                                var tds = $(node).parent().find("td:nth-child(" + (index+1) + ")");
-                                addListeners(tds);
-                            }
-                        });
+            var lastCount = 0;
+            var lastUpdateTime = (new Date()).getTime();
+            var checkForInsert = function() {
+                var t = (new Date()).getTime();
+                // If the last change was detected in the last five seconds, poll every 1250ms
+                // If a change occured within the last 10 minutes, poll every 5000ms
+                // If it has been more than 10 minutes since the last change poll every twenty seconds
+                var updateTime = (t - lastUpdateTime < 5000) ? 1250 : (t - lastUpdateTime < 600000) ? 5000: 20000;
+                $timeout(function() {
+                    var trs = $("#" + tableId + " tbody tr");
+                    if (trs.length > lastCount) {
+                        $log.debug("detected the following insertions:" + (trs.length - lastCount));
+                        var tds = $("#" + tableId + " tbody td:nth-child(" + (index + 1) + ")");
+                        addListeners(tds);
+                        lastCount = trs.length;
+                        lastUpdateTime = (new Date()).getTime();
+                    } else {
+                        $log.debug("no insertions detected.  Using poll time:" + updateTime);
                     }
-                });
-            });
-            var config = {childList: true};
-            observer.observe(target, config);
-            return observer;
-        };
+                    checkForInsert();
+                }, updateTime, false);
+            };
+            checkForInsert();
+        }
 
-        function addListeners(tds) {
-            tds.off("mouseenter mouseleave"); // remove all previously added ones
-            tds.hover(function() {
-                tds.addClass("column-highlight");
+        function addListeners(elems) {
+            elems.off("mouseenter mouseleave"); // remove all previously added ones
+            elems.hover(function() {
+                elems.addClass("column-highlight");
             }, function() {
-                tds.removeClass("column-highlight");
+                elems.removeClass("column-highlight");
             });
-            //TODO: possible memory leak from not clearing on $destroy?
-        };
+        }
 
         return {
             restrict: 'A',
@@ -54,20 +59,18 @@
                 }
                 var tableId = stgTableService.getIdOfContainingTable(element);
                 if (tableId) {
-                    var observer = null;
                     var index = element.parent().children().toArray().indexOf(element[0]);
                     if (index !== undefined) {
                         $timeout(function() {
-                            var tds = $("#" + tableId + " td:nth-child(" + (index+1) + ")");
+                            var tds = $("#" + tableId + " td:nth-child(" + (index + 1) + ")");
                             addListeners(tds);
-                            observer = trackNewInsertions(tableId, index);
+                            trackNewInsertions(tableId, index);
                         }, 0, false);
-                        
+
                     }
                     scope.$on('$destroy', function() {
-                        if (observer !== null) {
-                            observer.disconnect(); // remove observer from binding
-                        }
+                        var tds = $("#" + tableId + " td:nth-child(" + (index + 1) + ")");
+                        tds.off("mouseenter mouseleave");
                     });
                 }
             }
