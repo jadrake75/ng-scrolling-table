@@ -2,9 +2,9 @@
 
     'use strict';
 
-    var tables = angular.module('table.highlightColumn', []);
+    var tables = angular.module('table.highlightColumn', ["ng-scrolling-table.mixins", "table.scrolling-table"]);
 
-    tables.directive('stgHighlightColumn', function($timeout, $log, stgTableService) {
+    tables.directive('colHighlight', function($timeout, $log, ScrollingTableHelper, tableEvents) {
 
         /**
          * Track new insertions of TRs into the TBODY and specify for the
@@ -14,30 +14,9 @@
          * @param {type} index
          * @returns {undefined}
          */
-        function trackNewInsertions(tableId, index) {
-            var lastCount = 0;
-            var lastUpdateTime = (new Date()).getTime();
-            var checkForInsert = function() {
-                var t = (new Date()).getTime();
-                // If the last change was detected in the last five seconds, poll every 1250ms
-                // If a change occured within the last 10 minutes, poll every 5000ms
-                // If it has been more than 10 minutes since the last change poll every twenty seconds
-                var updateTime = (t - lastUpdateTime < 5000) ? 1250 : (t - lastUpdateTime < 600000) ? 5000: 20000;
-                $timeout(function() {
-                    var trs = $("#" + tableId + " tbody tr");
-                    if (trs.length > lastCount) {
-                        $log.debug("detected the following insertions:" + (trs.length - lastCount));
-                        var tds = $("#" + tableId + " tbody td:nth-child(" + (index + 1) + ")");
-                        addListeners(tds);
-                        lastCount = trs.length;
-                        lastUpdateTime = (new Date()).getTime();
-                    } else {
-                        $log.debug("no insertions detected.  Using poll time:" + updateTime);
-                    }
-                    checkForInsert();
-                }, updateTime, false);
-            };
-            checkForInsert();
+        function handleInsertions(tableId, index) {
+            var tds = $("#" + tableId + " tbody td:nth-child(" + (index + 1) + ")");
+            addListeners(tds);
         }
 
         function addListeners(elems) {
@@ -57,16 +36,16 @@
                     $log.error("Using stg-highlight-column on an element " + tagName + " is not supported.");
                     return;
                 }
-                var tableId = stgTableService.getIdOfContainingTable(element);
+                var tableId = ScrollingTableHelper.getIdOfContainingTable(element);
                 if (tableId) {
                     var index = element.parent().children().toArray().indexOf(element[0]);
                     if (index !== undefined) {
                         $timeout(function() {
-                            var tds = $("#" + tableId + " td:nth-child(" + (index + 1) + ")");
-                            addListeners(tds);
-                            trackNewInsertions(tableId, index);
+                           handleInsertions(tableId, index);
                         }, 0, false);
-
+                        scope.$on(tableEvents.insertRows, function(len) {
+                            handleInsertions(tableId, index);
+                        });
                     }
                     scope.$on('$destroy', function() {
                         var tds = $("#" + tableId + " td:nth-child(" + (index + 1) + ")");

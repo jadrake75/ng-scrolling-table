@@ -36,7 +36,9 @@ module.exports = function (grunt) {
             },
             dev: {
                 src: [
-                    'src/**/*.js'
+                    'src/util/**/*.js',
+                    'src/controller/**/*.js',
+                    'src/directives/**/*.js'
                 ],
                 dest: '<%= distdir %>/ng-scrolling-table.js'
             }
@@ -54,6 +56,16 @@ module.exports = function (grunt) {
                     {
                         src: ['node_modules/grunt-contrib-lesselements/elements.less'],
                         dest: 'src/less/elements.less'
+                    }
+                ]
+            },
+            resources: {
+                files: [
+                    {
+                        cwd: 'src/resources',
+                        src: ['**'],
+                        dest: 'dist/resources',
+                        expand: true
                     }
                 ]
             }
@@ -92,6 +104,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('dev', ['concat:dev', 'copy:lesselements', 'less:dev']);
-    grunt.registerTask('production', ['uglify:production', 'copy:lesselements', 'less:production', 'compress:production']);
+    grunt.registerTask('dev', ['concat:dev', 'copy', 'less:dev']);
+    grunt.registerTask('production', ['uglify:production', 'copy', 'less:production', 'compress:production']);
 };

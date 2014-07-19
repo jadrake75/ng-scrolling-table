@@ -7,7 +7,8 @@
         'table.empty-table',
         'table.table-selector',
         'table.highlightColumn',
-        'table.column-resizing'
+        'table.column-resizing',
+        'table.column-visibility'
     ]);
     
 })(angular);

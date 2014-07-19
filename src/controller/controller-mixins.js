@@ -12,6 +12,7 @@
                 loadFinished: 'load-finished',
                 filter: 'filter'
             })
+            
             // TODO: This will be moved to controllers for the directives
             .factory('stgControllerMixins', function(stgControllerEvents) {
                 $.extend(true, this, {

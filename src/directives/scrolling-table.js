@@ -1,4 +1,6 @@
-(function(angular) {
+MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+(function(angular, $, Math, MutationObserver) {
 
     'use strict';
 
@@ -16,9 +18,10 @@
 
     var tables = angular.module('table.scrolling-table', []);
 
-    tables.service('stgTableService', function() {
+    tables.service('ScrollingTableHelper', function() {
         return {
             getIdOfContainingTable: function(element) {
+                element = $(element); // ensure wrapped
                 var tableContainer = element.closest('.tableWrapper');
                 if (tableContainer && tableContainer[0]) {
                     return tableContainer[0].id;
@@ -33,7 +36,13 @@
         };
     });
 
-    tables.directive('stgScrollingTable', function($timeout, $window, $document, stgTableService, stgAttributes) {
+    tables.constant('tableEvents', {
+        insertRows: 'insert-rows',
+        deleteRows: 'delete-rows',
+        changeVisibility: 'change-visibility'
+    });
+
+    tables.directive('stgScrollingTable', function($timeout, $log, $window, $document, ScrollingTableHelper, stgAttributes, tableEvents) {
 
         /**
          * Will ensure that each table row has reference attribute as defined by the refIdAttribute.
@@ -46,12 +55,83 @@
             var trs = content.find('tbody tr');
             trs.each(function(index, trElem) {
                 var tr = $(trElem);
-                if( tr.attr && tr.attr(refIdAttribute) === undefined ) {
-                   tr.attr(refIdAttribute, guid());
+                if (tr.attr && tr.attr(refIdAttribute) === undefined) {
+                    tr.attr(refIdAttribute, guid());
                 }
             });
         }
 
+        function observeByMutation(tableId, callback) {
+            var obs = new MutationObserver(function(mutations, observer) {
+                var found = false;
+                for (var i = 0; i < mutations.length; ++i) {
+                    var mutation = mutations[0];
+                    var list = (mutation.addedNodes && mutation.addedNodes.length > 0) ?
+                            mutation.addedNodes : mutation.removedNodes;
+                    var len = list.length;
+                    if (len > 0) {
+                        for (var j = 0; j < len; j++) {
+                            var node = list[j];
+                            if (node.tagName === "TR") {
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (found) {
+                        break;
+                    }
+                }
+                if (found) {
+                    callback.apply(this);
+                    observer.disconnect();
+                }
+            });
+            obs.observe($('#' + tableId + " tbody").get(0), {
+                childList: true
+            });
+        }
+
+
+        function trackRowChanges(tableId, scope) {
+            var lastUpdateTime = (new Date()).getTime();
+            var lastCount = 0;
+
+            var updateState = function(len) {
+                lastCount = len;
+                lastUpdateTime = (new Date()).getTime();
+            };
+            var checkForChanges = function() {
+                var trLen = $("#" + tableId + " tbody tr").length;
+                if (trLen > lastCount) {
+                    $log.debug("detected the following addditions:" + (trLen - lastCount));
+                    scope.$broadcast(tableEvents.insertRows, {
+                        tableId: tableId,
+                        inserted: (trLen - lastCount)
+                    });
+                    updateState(trLen);
+                } else if (trLen < lastCount) {
+                    $log.debug("detected the following removals:" + (lastCount - trLen));
+                    scope.$broadcast(tableEvents.deleteRows, {
+                        tableId: tableId,
+                        deleted: (lastCount - trLen)
+                    });
+                    updateState(trLen);
+                } else {
+                    // $log.debug("no changes detected");
+                }
+                var delta = (new Date()).getTime() - lastUpdateTime;
+                if (delta > 5000) {
+                    $log.debug("switching to mutation observation state...");
+                    observeByMutation(tableId, checkForChanges);
+                } else {
+                    var timer = (delta < 2500) ? 250 : 500;
+                    $timeout(checkForChanges, timer, false);
+                }
+            };
+            checkForChanges();
+        }
+        
         function isIE() {
             return ($window.navigator.userAgent.indexOf('MSIE') !== -1 || $window.navigator.appVersion.indexOf('Trident/') > 0);
         }
@@ -76,7 +156,7 @@
                 thead.find('th').each(function(index, elem) {
                     var el = $(elem);
                     var w = null;
-                    if( elem.className !== '') {  // if classes are defined attempt to calculate width
+                    if (elem.className !== '') {  // if classes are defined attempt to calculate width
                         var elm = el.clone();
                         $($document[0].body).append(elm);
                         w = elm.css("width");
@@ -94,14 +174,14 @@
                 colGroup.detach().appendTo(headerTable);
             }
             colGroup.clone().appendTo(dataTable);
-            
+
         }
 
         return {
             restrict: 'A',
             scope: true,
             compile: function compile($element, attrs, transclude) {
-               
+
                 var wrapper = $('<div class="tableWrapper"></div>');
                 wrapper.attr('id', guid());
 
@@ -110,7 +190,7 @@
                 wrapper.append(headWrap).append(bodyWrap);
 
                 var headerTable = $(headWrap.find('table')[0]);
-                var dataTable =  $(bodyWrap.find('table')[0]);
+                var dataTable = $(bodyWrap.find('table')[0]);
                 var thead = $element.find('thead');
                 var tbody = $element.find('tbody');
                 handleColGroups($element, headerTable, dataTable, thead, tbody);
@@ -122,7 +202,7 @@
                 });
 
                 var maxHeight = $element.css('max-height');
-                if( (!maxHeight || maxHeight === 'none') && attrs.height ) {
+                if ((!maxHeight || maxHeight === 'none') && attrs.height) {
                     maxHeight = attrs.height + 'px';
                 }
                 wrapper.css('max-height', maxHeight);
@@ -141,7 +221,7 @@
                     headersElemArray.push(wrapper.outerHTML.match(regexOnlyTagData)[0]);
                 });
                 $(headerRows[0]).empty();
-                $(headerRows[0]).append( $( headersElemArray.join('') ) );
+                $(headerRows[0]).append($(headersElemArray.join('')));
 
                 var bodyRows = wrapper.find('tbody tr');
                 var bodyElemArray = [];
@@ -149,25 +229,25 @@
                     bodyElemArray.push(wrapper.outerHTML.match(regexOnlyTagData)[0]);
                 });
                 $(bodyRows[0]).empty();
-                $(bodyRows[0]).append( $( bodyElemArray.join('') ) );
+                $(bodyRows[0]).append($(bodyElemArray.join('')));
 
                 return {
-                    // Is run BEFORE child directives.
+                    // Will run BEFORE child directives.
                     pre: function(scope, element, attrs) {
                         scope.headersElemArray = headersElemArray;
                         scope.bodyElemArray = bodyElemArray;
                     },
                     post: function(scope, element, attrs) {
-                        var refIdAttribute = ( typeof attrs.refId !== 'undefined' ) ? attrs.refId : stgAttributes.refId;
+                        var refIdAttribute = (typeof attrs.refId !== 'undefined') ? attrs.refId : stgAttributes.refId;
                         var cloneHead = $(element.find('thead')[0]).clone();
                         var allMinWidthHeaders = cloneHead.find('th');
                         element.append(cloneHead.removeClass('tableHeader').addClass('minWidthHeaders'));
-                        var tableUUID = stgTableService.getIdOfContainingTable(element);
+                        var tableUUID = ScrollingTableHelper.getIdOfContainingTable(element);
                         for (var i = 0; i < allMinWidthHeaders.length; i++) {
                             var width = $(allMinWidthHeaders[i]).width() + 'px';
                             $('#' + tableUUID + ' .tableHeader th:nth-child(' + (i + 1) + ')').css("minWidth", width);
                         }
-                        cloneHead.remove();  
+                        cloneHead.remove();
                         var debounceId;
                         element.resize(function() {
                             $timeout.cancel(debounceId);
@@ -176,16 +256,22 @@
                             }, 50, false);
 
                         });
-                        $timeout(function() {
-                            calculateScrollerHeight(element);
-                            var scroller = element.find('div.scroller');
-                            ensureRowIds(scroller, refIdAttribute);
-                            element.find('.tableHeader').css("padding-right",(scroller.width() - scroller.find('table').width()) + "px");
-                        }, 0, false);
+                        var calcFn = function(evt, data) {
+                            if( data.tableId === tableUUID ) {
+                                calculateScrollerHeight(element);
+                                var scroller = element.find('div.scroller');
+                                ensureRowIds(scroller, refIdAttribute);
+                                element.find('.tableHeader').css("padding-right", (scroller.width() - scroller.find('table').width()) + "px");
+                            }
+                        };
+                        
+                        trackRowChanges(tableUUID, scope);
+                        scope.$on(tableEvents.insertRows, calcFn);
+                        scope.$on(tableEvents.deleteRows, calcFn);
                     }
-                }
+                };
             }
         };
     });
 
-})(angular);
+})(angular, jQuery, Math, MutationObserver);

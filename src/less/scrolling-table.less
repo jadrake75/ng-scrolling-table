@@ -15,7 +15,7 @@
         overflow-x: hidden;
         background-color: @color-background;
         border-bottom: 1px @color-table-cellBorder solid;
-        
+
         td {
             border: @table-border-tablecell;
             overflow: hidden;
@@ -48,7 +48,7 @@
             }
         }
     }
-    
+
     .tableHeader {
         overflow: hidden;
         .gradient(@color-gradient-light, @color-gradient-dark, @color-gradient-light);
@@ -89,9 +89,34 @@
         padding: 4px;
         font-size: @table-font-size;
     }
-
 }
 
+.col-hidden {
+    display: none;
+    // visibility: collapse;
+}
+
+.column-menu {
+    background-color: @color-background-menu;
+    border: @table-border-column-visibility;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    overflow-y: auto;
+    width: 170px;
+    height: 125px;
+    display: none;
+    .drop-shadow(2px, 3px);
+    ul {
+        padding-left: 10px;
+        margin: 5px 0;
+        li {
+            list-style: none;
+            font-size: 0.75em;
+        } 
+    }
+
+}
 .minWidthHeaders {
     width: 1px;
     height: 1px;
