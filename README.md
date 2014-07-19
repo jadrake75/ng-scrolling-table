@@ -1,4 +1,6 @@
 ### ** NOT READY FOR USE YET **
+Please wait until the 1.0 milestone release for using in any projects.  APIs (including directives) are subject to change until this release is finalized.
+
 
 # ng-scrolling-table
 ## An Angular Scrolling Table using HTML Tags
@@ -19,3 +21,7 @@ ng-scrolling-table Team:
 * [Jason Drake](https://github.com/jadrake75)
 * [Joseph Aseplund] (https://github.com/xanir)
 * [Brien Coffield] (https://github.com/coffbr01)
+
+
+__Additional Credits:__
+* Fugue Icons by Yusaki Kamiyamane (http://p.yusukekamiyamane.com)

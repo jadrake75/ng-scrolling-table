@@ -6,7 +6,9 @@
         'table.scrolling-table', 
         'table.empty-table',
         'table.table-selector',
-        'table.highlightColumn'
+        'table.highlightColumn',
+        'table.column-resizing',
+        'table.column-visibility'
     ]);
     
 })(angular);

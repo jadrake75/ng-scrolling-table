@@ -8,15 +8,21 @@
     left: 0;
     right: 0;
     bottom: 0px;
+
     .scroller {
         position: relative;
         overflow-y: auto;
         overflow-x: hidden;
         background-color: @color-background;
         border-bottom: 1px @color-table-cellBorder solid;
-        
+
         td {
             border: @table-border-tablecell;
+            overflow: hidden;
+            &.column-highlight {
+                background-color: darken(@color-highlight-hover, 7%);
+                border-color: darken(@color-highlight-hover, 2%);
+            }
         }
         tr {
             display: table-row;
@@ -44,12 +50,8 @@
     }
 
     .tableHeader {
-        width: 100%;
         overflow: hidden;
         .gradient(@color-gradient-light, @color-gradient-dark, @color-gradient-light);
-        table {
-            table-layout: fixed;
-        }
         tr {
             background-color: transparent;
             border: 1px @color-border-highlight solid;
@@ -58,6 +60,7 @@
                 font-weight: normal;
                 .user-select(none);
                 border-left: @table-border-tablecell;
+                overflow: hidden;
                 &:first-child {
                     border-left: none;
                 }
@@ -72,7 +75,7 @@
         border-collapse: collapse;
         border-spacing: 0;
         width: 100%;
-        table-layout: auto;
+        table-layout: fixed;
     }
     tr {
         background-color: @color-table-oddRow;
@@ -86,16 +89,38 @@
         padding: 4px;
         font-size: @table-font-size;
     }
-
 }
 
+.col-hidden {
+    display: none;
+    // visibility: collapse;
+}
+
+.column-menu {
+    background-color: @color-background-menu;
+    border: @table-border-column-visibility;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    overflow-y: auto;
+    width: 170px;
+    height: 125px;
+    display: none;
+    .drop-shadow(2px, 3px);
+    ul {
+        padding-left: 10px;
+        margin: 5px 0;
+        li {
+            list-style: none;
+            font-size: 0.75em;
+        } 
+    }
+
+}
 .minWidthHeaders {
     width: 1px;
     height: 1px;
     overflow: hidden;
     position: absolute;
-    table {
-        table-layout: auto;
-    }
 }
 

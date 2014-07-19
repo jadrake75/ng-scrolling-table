@@ -10,30 +10,37 @@
             [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
                 display: none !important;
             }
+            .name {
+                width: 150px;
+            }
         </style>
     </head>
     <body>
 
         <div ng-cloak ng-controller="BasicCtrl">
 
-            <div style="margin-top: 3em;">5 Rows - 22 Columns</div>
+            <div style="margin-top: 3em;">5 Rows - 22 Columns
+                <br/>
+            <img src="../dist/resources/images/edit-column-icon.png" add-visibility-menu="" style="float:left;"/>
+            <br/>
             <table
                 data-stg-scrolling-table
                 data-stg-table-empty="No items found."
+                data-stg-enable-column-resizing
                 style="width: 100%; ">
                 <thead>
                     <tr>
-                        <th data-column-sortable data-col="rate">Name</th>
-                        <th>Phone Number</th>
-                        <th width="100px">Phone Number</th>
-                        <th>Phone Number</th>
-                        <th>Phone Number</th>
-                        <th>Phone Number</th>
+                        <th data-column-sortable class="name" data-col="rate">Name</th>
+                        <th style="background-color:red;" col-visibility="{{hideColumns}}">Hidden Number</th>
+                        <th class="Phone" width="100px">Phone Number</th>
+                        <th col-fixed="true">Phone Number</th>
                         <th>Phone Number</th>
                         <th>Phone Number</th>
                         <th>Phone Number</th>
                         <th>Phone Number</th>
                         <th>Phone Number</th>
+                        <th style="background-color:red;" col-visibility="{{hideColumns}}">Phone Number</th>
+                        <th style="background-color:red;" col-visibility="{{hideColumns}}">Phone Number</th>
                         <th>Phone Number</th>
                         <th>Phone Number</th>
                         <th>Phone Number</th>
@@ -74,73 +81,84 @@
                     </tr>
                 </tbody>
             </table>
+            <button ng-click="toggleHiddenColumn()">Hidden: {{!hideColumns}}</button>
+            </div>
+           
 
-            <div style="margin-top: 3em;">50 Rows - 22 Columns (hover over headers to highlight data columns)</div>
+            <div style="margin-top: 3em;">50 Rows - 22 Columns (hover over headers to highlight data columns)
+            <img src="../dist/resources/images/edit-column-icon.png" add-visibility-menu="" style="float:right;"/>
+            <br/>
             <table
                 data-stg-scrolling-table
-                data-stg-table-selector data-multi-select
+                data-stg-table-selector data-multi-select="true"
+                data-stg-enable-column-resizing
                 data-stg-table-empty="No items found."
                 style="width: 100%; max-height: 250px;">
                 <thead>
                     <tr>
-                        <th stg-table-highlight-column data-column-sortable data-col="rate">Name</th>
-                        <th stg-table-highlight-column width="100px">Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
-                        <th stg-table-highlight-column>Phone Number</th>
+                        <th data-column-sortable data-col="rate" width="250px">Name</th>
+                        <th width="100px">Phone Number</th>
+                        <th data-col-highlight>Phone Number</th>
+                        <th data-col-highlight>Phone Number</th>
+                        <th data-col-highlight>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Phone Number</th>
                     </tr>
                 </thead>
                 <tbody >
                     <tr data-ng-repeat="c in data | limitTo: 50 track by $index" >
-                        <td stg-table-highlight-column>{{c.name}}</td>
-                        <td stg-table-highlight-column width="100px">{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
-                        <td stg-table-highlight-column>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.name}}</td>
+                        <td width="100px">{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
+                        <td>{{c.phoneNumber.slice(0, 2)}}</td>
                     </tr>
                 </tbody>
             </table>
+            </div>
             
-            
-            <div style="margin-top: 3em;">500 Rows</div>
+            <div style="margin-top: 3em;">{{data.length}} Rows with Column Resizing</div>
             <table
                 data-stg-scrolling-table
                 data-stg-table-empty="No items found."
+                data-stg-enable-column-resizing
                 style="width: 100%; max-height: 250px;">
+                <colgroup>
+                    <col data-col-highlight/>
+                    <col/>
+                </colgroup>
                 <thead>
                     <tr>
                         <th data-stg-column-sortable data-col="rate">Name</th>
@@ -148,13 +166,15 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr data-ng-repeat="c in data | limitTo: 500 track by $index" >
+                    <tr data-ng-repeat="c in data track by $index" >
                         <td>{{c.name}}</td>
                         <td>{{c.phoneNumber}}</td>
                     </tr>
                 </tbody>
             </table>
-            
+            <button ng-click="addRow()">Add row</button>
+            <button ng-click="removeRow()">Remove row</button>
+ 
             <div style="margin-top: 3em;">Empty Table Test</div>
             <table
                 data-stg-scrolling-table
@@ -175,11 +195,9 @@
                 </tbody>
             </table>
         </div>
-
         
-        <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.8/angular.js"></script>
-        <script src="https://rawgithub.com/EnzeyNet/CSSRuleEditor/master/src/CSSRuleEditor.js"></script>
         <script src="../dist/ng-scrolling-table.js"></script>
         <script src="basic.js"></script>
         
