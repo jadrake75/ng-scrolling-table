@@ -105,5 +105,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.registerTask('dev', ['concat:dev', 'copy', 'less:dev']);
-    grunt.registerTask('production', ['uglify:production', 'copy', 'less:production', 'compress:production']);
+    grunt.registerTask('production', ['dev', 'uglify:production', 'less:production', 'compress:production']);
 };

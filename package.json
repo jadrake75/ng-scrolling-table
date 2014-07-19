@@ -1,6 +1,10 @@
 {
   "name": "ng-scrolling-table",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jadrake75/ng-scrolling-table.git"
+  },
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
