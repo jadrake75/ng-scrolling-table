@@ -14,18 +14,24 @@
                 tds.addClass("col-hidden");
                 col.addClass("col-hidden");
             } else {
-                ths.removeClass("col-hidden");
-                tds.removeClass("col-hidden");
                 col.removeClass("col-hidden");
+                tds.removeClass("col-hidden");
+                ths.removeClass("col-hidden");
             }
             // firefox requires a change to the border-collapse to get the columns to align
             if (isFirefox()) {
                 $timeout(function() {
-                    $("#" + tableId + " table").css("border-collapse", "inherit");
+                    $("#" + tableId + " table").css({
+                        "border-collapse": "",
+                        "width": "99%"
+                    });
                 }, 0, false);
                  $timeout(function() {
-                    $("#" + tableId + " table").css("border-collapse", "collapse");
-                }, 0, false);
+                     $("#" + tableId + " table").css({
+                        "border-collapse": "collapse",
+                        "width": "100%"
+                    });
+                }, 50, false);
             }
         };
         return this;
