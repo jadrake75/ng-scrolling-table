@@ -21,11 +21,11 @@
             // firefox requires a change to the border-collapse to get the columns to align
             if (isFirefox()) {
                 $timeout(function() {
-                    $("#" + tableId + " table").css("border-collapse", "");
-                }, 10, false);
+                    $("#" + tableId + " table").css("border-collapse", "inherit");
+                }, 0, false);
                  $timeout(function() {
                     $("#" + tableId + " table").css("border-collapse", "collapse");
-                }, 10, false);
+                }, 0, false);
             }
         };
         return this;
