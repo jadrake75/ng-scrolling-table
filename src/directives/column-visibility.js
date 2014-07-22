@@ -22,7 +22,7 @@
             if (isFirefox()) {
                 $timeout(function() {
                     $("#" + tableId + " table").css("border-collapse", "");
-                }, 0, false);
+                }, 25, false);
             }
         };
         return this;
