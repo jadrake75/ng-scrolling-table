@@ -19,7 +19,7 @@
                     }
                 }, 500);
 
-                
+
                 $scope.$on(stgControllerEvents.selection, function(evt, sRows) {
                     $scope.currentSelection = sRows;
                 });
@@ -32,11 +32,15 @@
                 };
                 $scope.toggleHiddenColumn = function() {
                     $scope.hideColumns = !$scope.hideColumns;
-                    var elm = $("th[col-visibility]");
-                    elm.each(function(indx, el) {
-                        var tableId = ScrollingTableHelper.getIdOfContainingTable($(el));
-                        ColumnVisibilityService.setColumnVisibility(tableId, el.cellIndex, $scope.hideColumns);
+                    var searchTypes = ["col-visibility", "data-col-visibility"];
+                    angular.forEach(searchTypes, function(searchType) {
+                        var elm = $("th[" + searchType + "]");
+                        elm.each(function(indx, el) {
+                            var tableId = ScrollingTableHelper.getIdOfContainingTable($(el));
+                            ColumnVisibilityService.setColumnVisibility(tableId, el.cellIndex, $scope.hideColumns);
+                        });
                     });
+
                 };
             }
             ).config(function($logProvider) {

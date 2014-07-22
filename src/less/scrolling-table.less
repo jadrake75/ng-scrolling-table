@@ -35,6 +35,8 @@
             }
         }
         .empty-msg {
+            border-left: @table-border-tablecell;
+            border-right: @table-border-tablecell;
             div {
                 padding: 5px 10px;
                 font-size: @table-font-size;
@@ -93,15 +95,12 @@
 
 .col-hidden {
     display: none;
-    // visibility: collapse;
 }
 
 .column-menu {
     background-color: @color-background-menu;
     border: @table-border-column-visibility;
     position: absolute;
-    top: 0px;
-    left: 0px;
     overflow-y: auto;
     width: 170px;
     height: 125px;
@@ -115,8 +114,8 @@
             font-size: 0.75em;
         } 
     }
-
 }
+
 .minWidthHeaders {
     width: 1px;
     height: 1px;
