@@ -2,7 +2,7 @@
     "use strict";
 
     var module = angular.module("table.column-visibility", ["table.scrolling-table"]);
-    module.factory("ColumnVisibilityService", function() {
+    module.factory("ColumnVisibilityService", function($timeout) {
         this.setColumnVisibility = function(tableId, index, showColumn) {
             // Currently setting visibility on the COL tag is not supported, so we 
             // are forced to use classes on the TD and TRs
@@ -10,23 +10,33 @@
             var ths = $("#" + tableId + " th:nth-child(" + (index + 1) + ")");
             var tds = $("#" + tableId + " td:nth-child(" + (index + 1) + ")");
             if (!showColumn) {
-                col.addClass("col-hidden");
                 ths.addClass("col-hidden");
                 tds.addClass("col-hidden");
+                col.addClass("col-hidden");
             } else {
-                col.removeClass("col-hidden");
                 ths.removeClass("col-hidden");
                 tds.removeClass("col-hidden");
+                col.removeClass("col-hidden");
+            }
+            // firefox requires a change to the border-collapse to get the columns to align
+            if (isFirefox()) {
+                $timeout(function() {
+                    $("#" + tableId + " table").css("border-collapse", "");
+                }, 0, false);
             }
         };
         return this;
     });
-    module.directive("addVisibilityMenu", function($compile, $timeout,$window, ColumnVisibilityService, ScrollingTableHelper) {
+    module.directive("tableVisibilityMenu", function($compile, $timeout, $window, ColumnVisibilityService, ScrollingTableHelper) {
+        var findHidden = function(tableId, col) {
+            return $("#" + tableId + " th:nth-child(" + (col + 1) + ")").hasClass("col-hidden");
+        };
+
         return {
             restrict: 'AE',
             controller: function($scope) {
                 $scope.toggleVisibilityCallback = function(tableId, col) {
-                    var hidden = $("#" + tableId + " col:nth-child(" + (col + 1) + ")").hasClass("col-hidden");
+                    var hidden = findHidden(tableId, col);
                     ColumnVisibilityService.setColumnVisibility(tableId, col, hidden);
                     $scope.colVisibilityModel["col-" + col] = hidden;
                 };
@@ -38,23 +48,26 @@
                         var tableId = ScrollingTableHelper.getIdOfContainingTable(el);
                         if (!tableId) {
                             var p = el.parent();
-                            while( !tableId && p.length > 0 ) {
+                            while (!tableId && p.length > 0) {
                                 tableId = ScrollingTableHelper.getIdOfContainingTable(p.find(".tableWrapper"));
                                 p = p.parent();
                             }
                         }
-                        
                         var ths = $("#" + tableId + " thead th");
-                        var html = "<div class='column-menu'><ul class='ui-menu'>";
-                        ths.each(function(idx, th) {
-                            var hidden = $("#" + tableId + " col:nth-child(" + (th.cellIndex + 1) + ")").hasClass("col-hidden");
-                            scope.colVisibilityModel["col-" + th.cellIndex] = !hidden;
-                            html += "<li class='ui-menu-item'><input type='checkbox' ng-model='colVisibilityModel[\"col-" + th.cellIndex + "\"]' ng-change='toggleVisibilityCallback(\"" + tableId + "\"," + th.cellIndex + ")'>" + $(th).text() + "</li>";
-                        });
-                        html += "</ul></div>";
-                        var markup = $compile(html)(scope);
-                        $("body").append(markup);
                         var menu = $(".column-menu");
+                        if (menu.length === 0) {
+                            $("body").append("<div class='column-menu'></div>");
+                            menu = $(".column-menu");
+                        }
+                        var html = "<ul>";
+                        ths.each(function(idx, th) {
+                            var hidden = findHidden(tableId, th.cellIndex);
+                            scope.colVisibilityModel["col-" + th.cellIndex] = !hidden;
+                            html += "<li><input type='checkbox' ng-model='colVisibilityModel[\"col-" + th.cellIndex + "\"]' ng-change='toggleVisibilityCallback(\"" + tableId + "\"," + th.cellIndex + ")'>" + $(th).text() + "</li>";
+                        });
+                        html += "</ul>";
+                        var markup = $compile(html)(scope);
+                        menu.html(markup);
                         var pos = el.position();
                         var left = Math.min($($window).width() - menu.width() - 15, pos.left + 5);
                         menu.css({
@@ -62,8 +75,8 @@
                             top: pos.top + 5
                         });
                         menu.show();
+                        MouseClickObserver.addContainer(menu);
                     });
-                    MouseClickObserver.addContainer($(".column-menu"));
                 });
             }
         };

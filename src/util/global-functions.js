@@ -1,4 +1,12 @@
-var MouseClickObserver = function() {
+function isFirefox() {
+    return (window.mozInnerScreenX !== undefined);
+};
+
+function isIE() {
+    return (window.navigator.userAgent.indexOf('MSIE') !== -1 || window.navigator.appVersion.indexOf('Trident/') > 0);
+}
+
+var MouseClickObserver = function($, angular, window) {
     var containers = [];
 
     this.addContainer = function(container) {
@@ -11,7 +19,7 @@ var MouseClickObserver = function() {
         if (!found) {
             containers.push(container);
         }
-        $(window.document).mouseup(processEvent);
+        $(window.document).on("mouseup", processEvent);
     };
 
     var processEvent = function(e) {
@@ -19,20 +27,19 @@ var MouseClickObserver = function() {
         for (var i = 0; i < containers.length; i++) {
             var container = $(containers[i].selector);
             if (!container.is(e.target) && container.has(e.target).length === 0) {
-                container.hide();
-                index = i;
+                if (container.css("display") !== "none") {
+                    containers.splice(i, 1);
+                    if (containers.length === 0) {
+                        $(window.document).off("mouseup");
+                    }
+                    container.hide();
+                }
                 break;
             } else {
                 // e.stopPropagation();
             }
         }
-        /*if (index >= 0) {
-         containers.splice(index, 1);
-         if (containers.length === 0) {
-         $(window.document).off("mouseup");
-         }
-         }*/
     };
 
     return this;
-}();
+}(jQuery, angular, window);
