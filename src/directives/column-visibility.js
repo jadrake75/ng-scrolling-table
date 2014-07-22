@@ -21,17 +21,10 @@
             // firefox requires a change to the border-collapse to get the columns to align
             if (isFirefox()) {
                 $timeout(function() {
-                    $("#" + tableId + " table").css({
-                        "border-collapse": "",
-                        "width": "99%"
-                    });
-                }, 0, false);
-                 $timeout(function() {
-                     $("#" + tableId + " table").css({
-                        "border-collapse": "collapse",
+                    $("#" + tableId + " td").css({
                         "width": "100%"
                     });
-                }, 50, false);
+                }, 0, false);
             }
         };
         return this;
