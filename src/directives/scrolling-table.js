@@ -36,13 +36,20 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
         };
     });
 
-    tables.constant('tableEvents', {
+    tables.constant('TableEvents', {
         insertRows: 'insert-rows',
         deleteRows: 'delete-rows',
-        changeVisibility: 'change-visibility'
+        changeVisibility: 'change-visibility',
+        selection: 'select',
+        clearSelection: 'clear-selection'
     });
 
-    tables.directive('stgScrollingTable', function($timeout, $log, $window, $document, ScrollingTableHelper, stgAttributes, tableEvents) {
+    tables.constant('TableAttributes', {
+        refId: 'ref-id',
+        columnFixed: 'column-fixed'
+    });
+
+    tables.directive('tableScrollingTable', function($timeout, $log, $window, $document, ScrollingTableHelper, TableAttributes, TableEvents) {
 
         /**
          * Will ensure that each table row has reference attribute as defined by the refIdAttribute.
@@ -105,14 +112,14 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 var trLen = $("#" + tableId + " tbody tr").length;
                 if (trLen > lastCount) {
                     $log.debug("detected the following addditions:" + (trLen - lastCount));
-                    scope.$broadcast(tableEvents.insertRows, {
+                    scope.$broadcast(TableEvents.insertRows, {
                         tableId: tableId,
                         inserted: (trLen - lastCount)
                     });
                     updateState(trLen);
                 } else if (trLen < lastCount) {
                     $log.debug("detected the following removals:" + (lastCount - trLen));
-                    scope.$broadcast(tableEvents.deleteRows, {
+                    scope.$broadcast(TableEvents.deleteRows, {
                         tableId: tableId,
                         deleted: (lastCount - trLen)
                     });
@@ -234,7 +241,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                         scope.bodyElemArray = bodyElemArray;
                     },
                     post: function(scope, element, attrs) {
-                        var refIdAttribute = (typeof attrs.refId !== 'undefined') ? attrs.refId : stgAttributes.refId;
+                        var refIdAttribute = (typeof attrs.refId !== 'undefined') ? attrs.refId : TableAttributes.refId;
                         var cloneHead = $(element.find('thead')[0]).clone();
                         var allMinWidthHeaders = cloneHead.find('th');
                         element.append(cloneHead.removeClass('tableHeader').addClass('minWidthHeaders'));
@@ -252,18 +259,23 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                             }, 50, false);
 
                         });
+                        var calcId;
                         var calcFn = function(evt, data) {
-                            if( data.tableId === tableUUID ) {
-                                calculateScrollerHeight(element);
-                                var scroller = element.find('div.scroller');
-                                ensureRowIds(scroller, refIdAttribute);
-                                element.find('.tableHeader').css("padding-right", (scroller.width() - scroller.find('table').width()) + "px");
-                            }
+                            $timeout.cancel(calcId);
+                            calcId = $timeout(function() {
+                                if (data.tableId === tableUUID) {
+                                    calculateScrollerHeight(element);
+                                    var scroller = element.find('div.scroller');
+                                    ensureRowIds(scroller, refIdAttribute);
+                                    element.find('.tableHeader').css("padding-right", (scroller.width() - scroller.find('table').width()) + "px");
+                                }
+                            }, 0, false);
+
                         };
-                        
+
                         trackRowChanges(tableUUID, scope);
-                        scope.$on(tableEvents.insertRows, calcFn);
-                        scope.$on(tableEvents.deleteRows, calcFn);
+                        scope.$on(TableEvents.insertRows, calcFn);
+                        scope.$on(TableEvents.deleteRows, calcFn);
                     }
                 };
             }

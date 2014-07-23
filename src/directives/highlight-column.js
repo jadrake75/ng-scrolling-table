@@ -2,9 +2,9 @@
 
     'use strict';
 
-    var tables = angular.module('table.highlightColumn', ["ng-scrolling-table.mixins", "table.scrolling-table"]);
+    var tables = angular.module('table.highlightColumn', ["table.scrolling-table"]);
 
-    tables.directive('colHighlight', function($timeout, $log, ScrollingTableHelper, tableEvents) {
+    tables.directive('colHighlight', function($timeout, $log, ScrollingTableHelper, TableEvents) {
 
         /**
          * Track new insertions of TRs into the TBODY and specify for the
@@ -22,9 +22,9 @@
         function addListeners(elems) {
             elems.off("mouseenter mouseleave"); // remove all previously added ones
             elems.hover(function() {
-                elems.addClass("column-highlight");
+                elems.addClass("col-highlight");
             }, function() {
-                elems.removeClass("column-highlight");
+                elems.removeClass("col-highlight");
             });
         }
 
@@ -33,7 +33,7 @@
             link: function(scope, element, attrs) {
                 var tagName = element[0].tagName;
                 if (tagName !== "COL" && tagName !== "TH") {
-                    $log.error("Using stg-highlight-column on an element " + tagName + " is not supported.");
+                    $log.error("Using col-highlight on an element " + tagName + " is not supported.");
                     return;
                 }
                 var tableId = ScrollingTableHelper.getIdOfContainingTable(element);
@@ -43,7 +43,7 @@
                         $timeout(function() {
                            handleInsertions(tableId, index);
                         }, 0, false);
-                        scope.$on(tableEvents.insertRows, function(len) {
+                        scope.$on(TableEvents.insertRows, function(len) {
                             handleInsertions(tableId, index);
                         });
                     }

@@ -2,7 +2,7 @@
 
     'use strict';
 
-    angular.module('table.table-selector', ['ng-scrolling-table.mixins'])
+    angular.module('table.table-selector', ["table.scrolling-table"])
             /**
              * This directive will manipulate the row styles to toggle selection on or
              * off.  It will augment the parent scope (scope that contains the table)
@@ -13,7 +13,7 @@
              * @param {type} $timeout
              * @returns {} The directive instance.
              */
-            .directive('stgTableSelector', function(stgControllerEvents, stgAttributes, $timeout) {
+            .directive('tableSelector', function($timeout, $log, TableEvents, TableAttributes, ScrollingTableHelper) {
 
                 return {
                     controller: function($scope) {
@@ -56,7 +56,7 @@
                                     selectedRows.push(id);
                                 }
                                 if( scope.$emit) {
-                                    scope.$emit(stgControllerEvents.selection, selectedRows);
+                                    scope.$emit(TableEvents.selection, selectedRows);
                                 }
                                 return cleared;
                             }
@@ -64,7 +64,8 @@
                     
                     },
                     link: function(scope, elm, attrs) {
-                        var refIdAttribute = (typeof attrs.refId !== 'undefined') ? attrs.refId : stgAttributes.refId;
+                        var tableId =  ScrollingTableHelper.getIdOfContainingTable(elm);
+                        var refIdAttribute = (typeof attrs.refId !== 'undefined') ? attrs.refId : TableAttributes.refId;
                         var multiSelect = (typeof attrs.multiSelect !== 'undefined' && attrs.multiSelect === "true");
                         scope.selection.setMultiSelect(multiSelect);
                         elm.on('click', 'td', function(e) {
@@ -94,6 +95,18 @@
                                     });
                                 }
                             }, 0, false);
+                        });
+                        scope.$on(TableEvents.clearSelection, function(evt, data) {
+                            if( !data || !data.tableId ) {
+                                $log.error("A tableId parameter is required to clear selection.");
+                                return;
+                            }
+                            if( scope.selection && data.tableId && data.tableId === tableId ) {
+                                scope.selection.clearSelected();
+                                $timeout(function() {
+                                    elm.find("tbody tr.selected").removeClass('selected');
+                                }, 0, false);
+                            }
                         });
                         elm.on('$destroy', function() {
                             elm.off('click', 'td');
