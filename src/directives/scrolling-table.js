@@ -94,9 +94,12 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                     observer.disconnect();
                 }
             });
-            obs.observe($('#' + tableId + " tbody").get(0), {
-                childList: true
-            });
+            var table = $("#" + tableId);
+            if (table) {
+                obs.observe(table.find(" tbody").get(0), {
+                    childList: true
+                });
+            }
         }
 
 

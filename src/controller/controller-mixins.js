@@ -3,7 +3,7 @@
     angular.module('ng-scrolling-table.mixins', [])
             
             // TODO: This will be moved to controllers for the directives
-            .factory('stgControllerMixins', function(stgControllerEvents) {
+            .factory('stgControllerMixins', function() {
                 $.extend(true, this, {
                     filterable: function() {
                         return {
@@ -42,8 +42,8 @@
                                 sort.asc = (sort.col === col ? !sort.asc : true);
                                 sort.col = col;
                                 var state = {};
-                                this.$emit(stgControllerEvents.stateRequest, state);
-                                this.$emit(stgControllerEvents.loadRequested, state);
+                                //this.$emit(stgControllerEvents.stateRequest, state);
+                                //this.$emit(stgControllerEvents.loadRequested, state);
                             },
                             clearSort: function() {
                                 this.sort(null);
