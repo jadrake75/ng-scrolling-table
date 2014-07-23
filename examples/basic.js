@@ -28,7 +28,7 @@
 
                     var tableId = ScrollingTableHelper.getIdOfContainingTable($("#" + wrapperId));
                     $scope.$broadcast(TableEvents.clearSelection, {
-                        tabl2eId: tableId
+                        tableId: tableId
                     });
                 };
                 $scope.addRow = function() {
