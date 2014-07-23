@@ -83,7 +83,7 @@
             }
         };
     });
-    module.directive("colVisibility", function($log, $timeout, ScrollingTableHelper, ColumnVisibilityService, tableEvents) {
+    module.directive("colVisibility", function($log, $timeout, ScrollingTableHelper, ColumnVisibilityService, TableEvents) {
         return {
             restrict: "A",
             link: function(scope, el, attrs) {
@@ -104,12 +104,12 @@
                         if (listener !== null) {
                             listener();
                         }
-                        listener = scope.$on(tableEvents.insertRows, function() {
+                        listener = scope.$on(TableEvents.insertRows, function() {
                             ColumnVisibilityService.setColumnVisibility(tableId, index, visible);
                         });
                         ColumnVisibilityService.setColumnVisibility(tableId, index, visible);
                     };
-                    scope.$on(tableEvents.changeVisibility, function(evt, data) {
+                    scope.$on(TableEvents.changeVisibility, function(evt, data) {
                         if (data.tableId && data.tableId === tableId && data.elm === el.get()[0]) {
                             showColumn = data.visible;
                             ColumnVisibilityService.setVisibility(showColumn);

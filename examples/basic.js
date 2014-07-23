@@ -3,8 +3,8 @@
     'use strict';
 
     angular.module('examples', ['ng-scrolling-table.mixins', 'ng-scrolling-table'])
-            .controller('BasicCtrl', function($scope, $compile, $timeout, $rootScope, tableEvents,
-                    ScrollingTableHelper, ColumnVisibilityService, stgControllerEvents) {
+            .controller('BasicCtrl', function($scope, $compile, $timeout, $rootScope, TableEvents,
+                    ScrollingTableHelper, ColumnVisibilityService) {
 
                 $scope.currentSelection = [];
                 $scope.hideColumns = false;
@@ -20,10 +20,17 @@
                 }, 500);
 
 
-                $scope.$on(stgControllerEvents.selection, function(evt, sRows) {
+                $scope.$on(TableEvents.selection, function(evt, sRows) {
                     $scope.currentSelection = sRows;
                 });
 
+                $scope.clearSelection = function(wrapperId) {
+
+                    var tableId = ScrollingTableHelper.getIdOfContainingTable($("#" + wrapperId));
+                    $scope.$broadcast(TableEvents.clearSelection, {
+                        tabl2eId: tableId
+                    });
+                };
                 $scope.addRow = function() {
                     $scope.data.push({'name': 'Person-' + (new Date()).getTime(), 'phoneNumber': '777-777-7777'});
                 };

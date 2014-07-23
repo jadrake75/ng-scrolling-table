@@ -1,17 +1,6 @@
 (function(angular, $) {
     'use strict';
     angular.module('ng-scrolling-table.mixins', [])
-            .constant('stgAttributes', {
-                refId: 'ref-id',
-                columnFixed: 'column-fixed'
-            })
-            .constant('stgControllerEvents', {
-                stateRequest: 'get-state',
-                selection: 'selection',
-                loadRequested: 'load-requested',
-                loadFinished: 'load-finished',
-                filter: 'filter'
-            })
             
             // TODO: This will be moved to controllers for the directives
             .factory('stgControllerMixins', function(stgControllerEvents) {

@@ -1,44 +1,40 @@
-(function(angular) {
-    
-    'use strict';
-    
-    angular.module('table.empty-table', [])
-        .directive('stgTableEmpty', function($timeout /*, stgControllerEvents*/) {
+(function(angular, $, RepeaterUtilities) {
 
+    'use strict';
+
+    var module = angular.module('table.empty-table', []);
+    module.directive('tableEmptyMessage', function($timeout, $log) {
+       
         return {
             link: function(scope, el, attrs) {
-                var modelData = (attrs.data) ? attrs.data : 'data';
-                var msg = (attrs.stgTableEmpty !== '') ? attrs.stgTableEmpty : 'No items.';
-                var tr = $(document.createElement('tr'));
+                var msg = (attrs.tableEmptyMessage !== '') ? attrs.tableEmptyMessage : 'No items.';
+                var tr = $("<tr/>");
                 var emptyToggleFn = function(val) {
-                        if (!val || val.length === 0) {
-                            tr.show();
-                        } else {
-                            tr.hide();
-                        } 
-                    };
+                    if (!val || val.length === 0) {
+                        tr.show();
+                    } else {
+                        tr.hide();
+                    }
+                };
                 $timeout(function() {
-                    var body = el.find('tbody');
-                    tr.addClass('empty-msg');
-                    tr.html('<div>' + msg + '</div>');
+                    var modelData = RepeaterUtilities.extractCollection(el);                   
+                    if( modelData === undefined ) {
+                        $log.warn("no model data found.");
+                    }
+                    var body = el.find("tbody");
+                    var rowCount = body.find("tr").length;
+                    tr.addClass("empty-msg");
+                    tr.html("<div>" + msg + "</div>");
+                    tr.hide();
                     body.append(tr);
-                    tr.show();
-                    
-                    scope.$watchCollection(modelData, emptyToggleFn);
-                    /*scope.$on(stgControllerEvents.filter, function() {
-                        $timeout(function() {
-                            var f_tr = body.find('tr');
-                            if (f_tr.length > 0 && $(f_tr[0]).hasClass('empty-msg')) {
-                                tr.show();
-                            } else {
-                                tr.hide();
-                            }
-                        }, 100);
-                    });*/
-                });
-
-            },
-            order: 1
+                    if( rowCount === 0 ) {
+                        tr.show();
+                    }
+                    if( modelData ) {
+                        scope.$watchCollection(modelData, emptyToggleFn);
+                    }
+                },0, false);
+            }
         };
     });
-})(angular);
+})(angular, jQuery, RepeaterUtilities);
