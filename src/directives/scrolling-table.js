@@ -95,7 +95,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 }
             });
             var table = $("#" + tableId);
-            if (table) {
+            if (table.length > 0) {
                 obs.observe(table.find(" tbody").get(0), {
                     childList: true
                 });
