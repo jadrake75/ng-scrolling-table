@@ -13,8 +13,17 @@ __Download:__
 
 __Example:__
 * [Live Example] (http://ng-scrolling-table.drakeserver.com/ng-scrolling-table%20live%20demo/examples/)
-* [Live Example (GitHub)] (http://jadrake75.github.io/ng-scrolling-table/)
 
+__Tests:__
+To contribute to the project it is preferred that changes or enhancements have accompanying tests.  To run the tests, you will require:
+* nodejs (npm)
+* git
+* bower (run npm install -g bower)
+
+To execute the tests run
+> npm test
+
+If you have growl installed you will get test notification changes.  The test target on npm will automatically call bower to install any tests dependencies needed.  By default, all tests dependencies are marked as optional since the continuous build environment is not executing the tests. 
 __Contributors:__
 
 ng-scrolling-table Team:
