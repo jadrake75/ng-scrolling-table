@@ -83,7 +83,7 @@
             }
         };
     });
-    module.directive("colVisibility", function($log, $timeout, ScrollingTableHelper, ColumnVisibilityService, TableEvents) {
+    module.directive("colVisibility", function($log, ScrollingTableHelper, ColumnVisibilityService, TableEvents) {
         return {
             restrict: "A",
             link: function(scope, el, attrs) {

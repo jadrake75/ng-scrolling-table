@@ -4,6 +4,11 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
         distdir: 'dist',
 
+        ngAnnotate: {
+            dist: {
+                src: ['<%= distdir %>/<%= pkg.name %>.js'],
+            }
+        },
         less: {
             dev: {
                 options: {
@@ -46,7 +51,7 @@ module.exports = function (grunt) {
         uglify: {
             production: {
                 files: {
-                    '<%= distdir %>/ng-scrolling-table.min.js': ['src/**/*.js']
+                    '<%= distdir %>/ng-scrolling-table.min.js': ['<%= distdir %>/ng-scrolling-table.js']
                 }
             }
         },
@@ -103,7 +108,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-clean');
-
+    grunt.loadNpmTasks('grunt-ng-annotate');
     grunt.registerTask('dev', ['concat:dev', 'copy', 'less:dev']);
-    grunt.registerTask('production', ['dev', 'uglify:production', 'less:production', 'compress:production']);
+    grunt.registerTask('production', ['dev', 'ngAnnotate:dist', 'uglify:production', 'less:production', 'compress:production']);
 };
