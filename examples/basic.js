@@ -8,6 +8,7 @@
 
                 $scope.currentSelection = [];
                 $scope.hideColumns = false;
+                $scope.emptyValues = [];
                 $scope.data = [
                     {'name': 'Jason', 'phoneNumber': '763-555-5522'},
                     {'name': 'Joseph', 'phoneNumber': '651-443-3322'}
@@ -34,6 +35,10 @@
                 $scope.addRow = function() {
                     $scope.data.push({'name': 'Person-' + (new Date()).getTime(), 'phoneNumber': '777-777-7777'});
                 };
+                $scope.addEmptyRow = function() {
+                    $scope.emptyValues.push({'name': 'Person-' + (new Date()).getTime(), 'phoneNumber': '777-777-7777'});
+                };
+                
                 $scope.removeRow = function() {
                     $scope.data.splice($scope.data.length - 1, 1);
                 };

@@ -194,12 +194,13 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr data-ng-repeat="c in emptyValues | limitTo: 10 track by $index" >
+                    <tr data-ng-repeat="c in emptyValues| limitTo: 10 track by $index" >
                         <td>{{c.name}}</td>
                         <td>{{c.phoneNumber}}</td>
                     </tr>
                 </tbody>
             </table>
+            <button ng-click="addEmptyRow()">Add row</button>
         </div>
         
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>

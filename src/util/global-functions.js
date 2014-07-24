@@ -18,7 +18,7 @@ var RepeaterUtilities = function($) {
      */
     this.extractCollection = function(elm) {
 
-        var tbody = elm.find("tbody");
+        var tbody = $(elm).find("tbody");
         var repeater = tbody.find("tr:first-child()");
         var r = repeater.attr("ng-repeat");
         if (!r || r === "") {
@@ -29,8 +29,9 @@ var RepeaterUtilities = function($) {
                 var indx = s.indexOf(" in ");
                 if (indx > 0) {
                     s = s.substring(indx + 4);
-                    if (s.indexOf(" ") > 0) {
-                        s = s.substring(0, s.indexOf(" "));
+                    indx = s.search(/( )|(\|)|(\")+/ig);
+                    if (indx > 0) {
+                        s = s.substring(0, indx);
                     }
                 }
             }
