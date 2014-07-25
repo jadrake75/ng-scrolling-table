@@ -49,7 +49,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
         columnFixed: 'column-fixed'
     });
 
-    tables.directive('tableScrollingTable', function($timeout, $log, $window, $document, ScrollingTableHelper, TableAttributes, TableEvents) {
+    tables.directive('tableScrollingTable', function($timeout, $log, $document, ScrollingTableHelper, TableAttributes, TableEvents) {
 
         /**
          * Will ensure that each table row has reference attribute as defined by the refIdAttribute.
@@ -115,21 +115,22 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 var trLen = $("#" + tableId + " tbody tr").length;
                 if (trLen > lastCount) {
                     $log.debug("detected the following addditions:" + (trLen - lastCount));
-                    scope.$broadcast(TableEvents.insertRows, {
+                    scope.$emit(TableEvents.insertRows, {
                         tableId: tableId,
                         inserted: (trLen - lastCount)
                     });
                     updateState(trLen);
                 } else if (trLen < lastCount) {
                     $log.debug("detected the following removals:" + (lastCount - trLen));
-                    scope.$broadcast(TableEvents.deleteRows, {
+                    scope.$emit(TableEvents.deleteRows, {
                         tableId: tableId,
                         deleted: (lastCount - trLen)
                     });
                     updateState(trLen);
                 } else {
-                    // $log.debug("no changes detected");
+                   //  $log.debug("no changes detected");
                 }
+
                 var delta = (new Date()).getTime() - lastUpdateTime;
                 if (delta > 5000) {
                     $log.debug("switching to mutation observation state...");
@@ -254,14 +255,6 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                             $('#' + tableUUID + ' .tableHeader th:nth-child(' + (i + 1) + ')').css("minWidth", width);
                         }
                         cloneHead.remove();
-                        var debounceId;
-                        element.resize(function() {
-                            $timeout.cancel(debounceId);
-                            debounceId = $timeout(function() {
-                                calculateScrollerHeight(element);
-                            }, 50, false);
-
-                        });
                         var calcId;
                         var calcFn = function(evt, data) {
                             $timeout.cancel(calcId);
@@ -275,6 +268,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                             }, 0, false);
 
                         };
+                        element.resize(calcFn);
 
                         trackRowChanges(tableUUID, scope);
                         scope.$on(TableEvents.insertRows, calcFn);
