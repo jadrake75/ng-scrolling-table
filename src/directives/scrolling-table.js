@@ -46,7 +46,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
     tables.constant('TableAttributes', {
         refId: 'ref-id',
-        columnFixed: 'column-fixed'
+        columnFixed: 'col-fixed'
     });
 
     tables.directive('tableScrollingTable', function($timeout, $log, $document, ScrollingTableHelper, TableAttributes, TableEvents) {
@@ -103,8 +103,6 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
             return obs;
         }
 
-
-
         function trackRowChanges(tableId, scope) {
             var lastTimeout = null;
             var lastUpdateTime = (new Date()).getTime();
@@ -148,7 +146,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                     observeByMutation(tableId, checkForChanges);
                 } else {
                     var timer = (delta < 2500) ? 250 : 500;
-                    $log.debug("waiting " + timer + "ms - " + tableId);
+               //     $log.debug("waiting " + timer + "ms - " + tableId);
                     lastTimeout = $timeout(checkForChanges, timer, false);
                 }
             };

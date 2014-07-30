@@ -27,7 +27,7 @@
                     var last = el.find("thead th:last-child()")[0];
                     // Change the cursor on mouse moving within a TH element near
                     // the right most limit for resizing.  
-                    // Note: column-fixed columns will not expose the handle
+                    // Note: col-fixed columns will not expose the handle
                     // 
                     // If this becomes expensive to calculate we could add a mouseenter
                     // to add the mouse move and then remove it on exit, but this does
@@ -38,6 +38,7 @@
                         var x = findXDistance(evt, elm);
                         if (last.cellIndex !== evt.target.cellIndex &&
                                 (w - x) < 10 &&
+                                !elm.hasClass(TableAttributes.columnFixed) &&
                                 elm.attr(TableAttributes.columnFixed) !== "true") {
                             elm.css("cursor", "col-resize");
                         } else {
@@ -51,6 +52,7 @@
                         if (last.cellIndex === evt.target.cellIndex ||
                                 target[0].nodeName !== "TH" ||
                                 target.outerWidth() - x > 10 ||
+                                target.hasClass(TableAttributes.columnFixed) ||
                                 target.attr(TableAttributes.columnFixed) === "true") {
                             return;
                         }

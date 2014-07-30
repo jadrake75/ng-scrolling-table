@@ -8,7 +8,8 @@
         'table.table-selector',
         'table.highlightColumn',
         'table.column-resizing',
-        'table.column-visibility'
+        'table.column-visibility',
+        'table.column-fixed'
     ]);
     
 })(angular);
