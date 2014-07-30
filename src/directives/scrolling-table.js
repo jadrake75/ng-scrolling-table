@@ -100,10 +100,13 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                     childList: true
                 });
             }
+            return obs;
         }
 
 
+
         function trackRowChanges(tableId, scope) {
+            var lastTimeout = null;
             var lastUpdateTime = (new Date()).getTime();
             var lastCount = 0;
 
@@ -112,6 +115,14 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 lastUpdateTime = (new Date()).getTime();
             };
             var checkForChanges = function() {
+                if (lastTimeout !== null) {
+                    if ($("#" + tableId).length === 0) {
+                        $timeout.cancel(lastTimeout);
+                        lastTimeout = null;
+                        $log.debug("detected removed table from DOM.  Cancelling timers.");
+                        return;
+                    }
+                }
                 var trLen = $("#" + tableId + " tbody tr").length;
                 if (trLen > lastCount) {
                     $log.debug("detected the following addditions:" + (trLen - lastCount));
@@ -128,16 +139,17 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                     });
                     updateState(trLen);
                 } else {
-                   //  $log.debug("no changes detected");
+                    //  $log.debug("no changes detected");
                 }
 
                 var delta = (new Date()).getTime() - lastUpdateTime;
                 if (delta > 5000) {
-                    $log.debug("switching to mutation observation state...");
+                    $log.debug("switching to mutation observation state for... " + tableId);
                     observeByMutation(tableId, checkForChanges);
                 } else {
                     var timer = (delta < 2500) ? 250 : 500;
-                    $timeout(checkForChanges, timer, false);
+                    $log.debug("waiting " + timer + "ms - " + tableId);
+                    lastTimeout = $timeout(checkForChanges, timer, false);
                 }
             };
             checkForChanges();
@@ -257,16 +269,12 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                         cloneHead.remove();
                         var calcId;
                         var calcFn = function(evt, data) {
-                            $timeout.cancel(calcId);
-                            calcId = $timeout(function() {
-                                if (data.tableId === tableUUID) {
-                                    calculateScrollerHeight(element);
-                                    var scroller = element.find('div.scroller');
-                                    ensureRowIds(scroller, refIdAttribute);
-                                    element.find('.tableHeader').css("padding-right", (scroller.width() - scroller.find('table').width()) + "px");
-                                }
-                            }, 0, false);
-
+                            if (data.tableId === tableUUID) {
+                                calculateScrollerHeight(element);
+                                var scroller = element.find('div.scroller');
+                                ensureRowIds(scroller, refIdAttribute);
+                                element.find('.tableHeader').css("padding-right", (scroller.width() - scroller.find('table').width()) + "px");
+                            }
                         };
                         element.resize(calcFn);
 
