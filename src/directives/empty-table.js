@@ -8,7 +8,7 @@
         return {
             link: function(scope, el, attrs) {
                 var msg = (attrs.tableEmptyMessage !== '') ? attrs.tableEmptyMessage : 'No items.';
-                var tr = $('<tr class="empty-msg"><td><div>' + msg + '</div></td></tr>');
+                var tr = $('<tr class="empty-msg"></tr>');
                 var emptyToggleFn = function(val) {
                     if (!val || val.length === 0) {
                         tr.show();
@@ -23,6 +23,7 @@
                     }
                     var tbody = el.find("tbody");
                     var rowCount = tbody.find("tr").length;
+                    tr.append('<div>' + msg + '</div>');
                     tbody.append(tr);
                     if( rowCount > 0) {
                         tr.hide();

@@ -158,6 +158,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
             var scroller = tableWrapper.find('.scroller');
             var thHeight = tableWrapper.find('.tableHeader').height();
             scroller.css('max-height', (tableWrapper.height() - thHeight) + 'px');
+            $log.debug("scroller height: " + scroller.css('max-height'));
         }
 
         /**
@@ -276,14 +277,20 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                         cloneHead.remove();
                         var calcId;
                         var calcFn = function(evt, data) {
-                            if (data.tableId === tableUUID) {
+                            var id = data.tableId;
+                            // during resize the resize will not emit the data element so we need
+                            // to get the id from the event target
+                            if( !id && evt.currentTarget ) {
+                                id = evt.currentTarget.id;
+                            }
+                            if (id === tableUUID) {
                                 calculateScrollerHeight(element);
                                 var scroller = element.find('.scroller');
                                 ensureRowIds(scroller, refIdAttribute);
                                 element.find('.tableHeader').css("padding-right", (scroller.width() - scroller.find('table').width()) + "px");
                             }
                         };
-                        element.resize(calcFn);
+                        $("#" + tableUUID).resize(calcFn);
 
                         trackRowChanges(tableUUID, scope);
                         scope.$on(TableEvents.insertRows, calcFn);
