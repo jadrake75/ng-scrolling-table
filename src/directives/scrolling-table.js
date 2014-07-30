@@ -59,10 +59,10 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
          * @param {type} refIdAttribute  The reference ID attribute
          */
         function ensureRowIds(content, refIdAttribute) {
-            var trs = content.find('tbody tr');
+            var trs = content.find('.scroller tr');
             trs.each(function(index, trElem) {
                 var tr = $(trElem);
-                if (tr.attr && tr.attr(refIdAttribute) === undefined) {
+                if (tr.attr(refIdAttribute) === undefined) {
                     tr.attr(refIdAttribute, guid());
                 }
             });
@@ -71,7 +71,8 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
         function observeByMutation(tableId, callback) {
             var obs = new MutationObserver(function(mutations, observer) {
                 var found = false;
-                for (var i = 0; i < mutations.length; ++i) {
+                var mlen = mutations.length;
+                for (var i = 0; i < mlen; ++i) {
                     var mutation = mutations[0];
                     var list = (mutation.addedNodes && mutation.addedNodes.length > 0) ?
                             mutation.addedNodes : mutation.removedNodes;
@@ -123,14 +124,14 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 }
                 var trLen = $("#" + tableId + " tbody tr").length;
                 if (trLen > lastCount) {
-                    $log.debug("detected the following addditions:" + (trLen - lastCount));
+                   // $log.debug("detected the following addditions:" + (trLen - lastCount));
                     scope.$emit(TableEvents.insertRows, {
                         tableId: tableId,
                         inserted: (trLen - lastCount)
                     });
                     updateState(trLen);
                 } else if (trLen < lastCount) {
-                    $log.debug("detected the following removals:" + (lastCount - trLen));
+                    //$log.debug("detected the following removals:" + (lastCount - trLen));
                     scope.$emit(TableEvents.deleteRows, {
                         tableId: tableId,
                         deleted: (lastCount - trLen)
@@ -146,7 +147,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                     observeByMutation(tableId, checkForChanges);
                 } else {
                     var timer = (delta < 2500) ? 250 : 500;
-               //     $log.debug("waiting " + timer + "ms - " + tableId);
+                    //     $log.debug("waiting " + timer + "ms - " + tableId);
                     lastTimeout = $timeout(checkForChanges, timer, false);
                 }
             };
@@ -156,7 +157,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
         function calculateScrollerHeight(tableWrapper) {
             var scroller = tableWrapper.find('.scroller');
             var thHeight = tableWrapper.find('.tableHeader').height();
-            scroller.css('max-height', (tableWrapper.height() - thHeight) + "px");
+            scroller.css('max-height', (tableWrapper.height() - thHeight) + 'px');
         }
 
         /**
@@ -165,11 +166,17 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
          * However, if one is generated it will set the widths of any existing 
          * width attributes on the TH elements on the COL elements and remove the 
          * explicit widths from any TH and/or TD cells.
+         * 
+         * @param $element
+         * @param headerTable
+         * @param dataTable
+         * @param thead
+         * @param tbody
          */
         function handleColGroups($element, headerTable, dataTable, thead, tbody) {
-            var colGroup = $element.find('colgroup').first();
+            var colGroup = $element.find('colgroup');
             if (colGroup.length === 0) {
-                colGroup = $('<colgroup></colgroup>');
+                var html = '<colgroup>';
                 thead.find('th').each(function(index, elem) {
                     var el = $(elem);
                     var w = null;
@@ -182,10 +189,12 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                     if (el.attr("width") !== undefined) { // explicit width handling
                         w = el.attr("width");
                         el.removeAttr("width");
-                        tbody.find("td:nth-child(" + (index + 1) + ")").removeAttr("width");
+                        tbody.find('td:nth-child(' + (index + 1) + ')').removeAttr("width");
                     }
-                    colGroup.append("<col " + ((w !== null) ? "width=\"" + w + "\"" : "") + "/>");
+                    html += "<col " + ((w !== null) ? "width=\"" + w + "\"" : "") + "/>";
                 });
+                html += '</colgroup>';
+                colGroup = $(html);
                 colGroup.appendTo(headerTable);
             } else {
                 colGroup.detach().appendTo(headerTable);
@@ -199,15 +208,13 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
             scope: true,
             compile: function compile($element, attrs, transclude) {
 
-                var wrapper = $('<div class="tableWrapper"></div>');
-                wrapper.attr('id', guid());
+                var wrapper = $('<div class="tableWrapper" id="' + guid() + '">' +
+                        '<div class="tableHeader"><table></table></div>' +
+                        '<div class="scroller"><table></table></div>' +
+                        '</div>');
 
-                var headWrap = $('<div class="tableHeader"><table></table></div>');
-                var bodyWrap = $('<div class="scroller"><table></table></div>');
-                wrapper.append(headWrap).append(bodyWrap);
-
-                var headerTable = $(headWrap.find('table')[0]);
-                var dataTable = $(bodyWrap.find('table')[0]);
+                var headerTable = $(wrapper.find('.tableHeader table')[0]);
+                var dataTable = $(wrapper.find('.scroller table')[0]);
                 var thead = $element.find('thead');
                 var tbody = $element.find('tbody');
                 handleColGroups($element, headerTable, dataTable, thead, tbody);
@@ -222,31 +229,31 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 if ((!maxHeight || maxHeight === 'none') && attrs.height) {
                     maxHeight = attrs.height + 'px';
                 }
-                wrapper.css('max-height', maxHeight);
-                wrapper.css('height', maxHeight);
-                $element.css('max-height', 0);
-
+                wrapper.css({
+                    'max-height': maxHeight,
+                    'height': maxHeight
+                });
                 $element.after(wrapper);
                 $element.remove();
 
                 // Regex strips illegal markup from element
                 //   which causes render failures in IE
                 var regexOnlyTagData = '<.*>';
-                var headerRows = wrapper.find('thead tr');
+                var headerRows = headerTable.find('tr');
                 var headersElemArray = [];
                 headerRows.children().each(function(index, wrapper) {
                     headersElemArray.push(wrapper.outerHTML.match(regexOnlyTagData)[0]);
                 });
-                $(headerRows[0]).empty();
-                $(headerRows[0]).append($(headersElemArray.join('')));
+                headerRows.empty();
+                headerRows.append($(headersElemArray.join('')));
 
-                var bodyRows = wrapper.find('tbody tr');
+                var bodyRows = dataTable.find('tr');
                 var bodyElemArray = [];
                 bodyRows.children().each(function(index, wrapper) {
                     bodyElemArray.push(wrapper.outerHTML.match(regexOnlyTagData)[0]);
                 });
-                $(bodyRows[0]).empty();
-                $(bodyRows[0]).append($(bodyElemArray.join('')));
+                bodyRows.empty();
+                bodyRows.append($(bodyElemArray.join('')));
 
                 return {
                     // Will run BEFORE child directives.
@@ -256,20 +263,22 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                     },
                     post: function(scope, element, attrs) {
                         var refIdAttribute = (typeof attrs.refId !== 'undefined') ? attrs.refId : TableAttributes.refId;
-                        var cloneHead = $(element.find('thead')[0]).clone();
+                        var cloneHead = element.find('.tableHeader thead').first().clone();
+                        // we can likely remove the min-width on the headers
                         var allMinWidthHeaders = cloneHead.find('th');
-                        element.append(cloneHead.removeClass('tableHeader').addClass('minWidthHeaders'));
+                        element.append(cloneHead);
                         var tableUUID = ScrollingTableHelper.getIdOfContainingTable(element);
-                        for (var i = 0; i < allMinWidthHeaders.length; i++) {
+                        var minLen = allMinWidthHeaders.length;
+                        for (var i = 0; i < minLen ; i++) {
                             var width = $(allMinWidthHeaders[i]).width() + 'px';
-                            $('#' + tableUUID + ' .tableHeader th:nth-child(' + (i + 1) + ')').css("minWidth", width);
+                            element.find('.tableHeader th:nth-child(' + (i + 1) + ')').css("minWidth", width);
                         }
                         cloneHead.remove();
                         var calcId;
                         var calcFn = function(evt, data) {
                             if (data.tableId === tableUUID) {
                                 calculateScrollerHeight(element);
-                                var scroller = element.find('div.scroller');
+                                var scroller = element.find('.scroller');
                                 ensureRowIds(scroller, refIdAttribute);
                                 element.find('.tableHeader').css("padding-right", (scroller.width() - scroller.find('table').width()) + "px");
                             }

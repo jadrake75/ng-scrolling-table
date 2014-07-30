@@ -96,7 +96,7 @@
             </div>
            
 
-            <div id="fiftyRows" style="margin-top: 3em;">50 Rows - 22 Columns (hover over headers to highlight data columns)
+            <div id="fiftyRows" style="margin-top: 3em;">50 Rows - 22 Columns (hover over columns 3 thru 5 to highlight columns)
             <img src="../dist/resources/images/table-delete-row-icon.png" alt="clear selection" ng-click="clearSelection('fiftyRows')"  style="float:right;"/>
                 <img src="../dist/resources/images/edit-column-icon.png" alt="menu" data-table-visibility-menu="" style="float:right;"/>
             <br/>
@@ -197,12 +197,12 @@
                 <thead>
                     <tr>
                         <th data-stg-column-sortable data-col="rate">Name</th>
-                        <th class="col-fixed simple-fixed">F.C.</th>
+                        <th class="col-fixed simple-fixed">Fixed</th>
                         <th>Phone Number</th>
                         
                     </tr>
                 </thead>
-                <tbody >
+                <tbody>
                     <tr data-ng-repeat="c in emptyValues| limitTo: 10 track by $index" >
                         <td>{{c.name}}</td>
                         <td>{{c.name}}</td>

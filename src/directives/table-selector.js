@@ -55,16 +55,16 @@
                                 if (cleared.indexOf(id) < 0) { // select if not cleared
                                     selectedRows.push(id);
                                 }
-                                if( scope.$emit) {
+                                if (scope.$emit) {
                                     scope.$emit(TableEvents.selection, selectedRows);
                                 }
                                 return cleared;
                             }
                         };
-                    
+
                     },
                     link: function(scope, elm, attrs) {
-                        var tableId =  ScrollingTableHelper.getIdOfContainingTable(elm);
+                        var tableId = ScrollingTableHelper.getIdOfContainingTable(elm);
                         var refIdAttribute = (typeof attrs.refId !== 'undefined') ? attrs.refId : TableAttributes.refId;
                         var multiSelect = (typeof attrs.multiSelect !== 'undefined' && attrs.multiSelect === "true");
                         scope.selection.setMultiSelect(multiSelect);
@@ -74,12 +74,14 @@
                             $timeout(function() {
                                 var isSelected = row.hasClass('selected');
                                 if (!multiSelect) {
-                                    $(e.currentTarget).closest('tr.selected').removeClass('selected');
+                                    $(e.currentTarget).closest('tr.selected').each(function() {
+                                        this.classList.remove('selected');
+                                    });
                                 } else if (isSelected) {
-                                    row.removeClass('selected');
+                                    row[0].classList.remove('selected');
                                 }
                                 if (!isSelected) {
-                                    row.addClass('selected');
+                                    row[0].classList.add('selected');
                                 }
                                 var cleared = scope.selection.selectRow(id);
                                 if (cleared.length > 0) {
@@ -88,7 +90,7 @@
                                         angular.forEach(rows, function(r) {
                                             var _r = $(r);
                                             if (_r.attr(refIdAttribute) === clearingRow) {
-                                                _r.removeClass('selected');
+                                                _r.get().classList.remove('selected');
                                             }
                                             ;
                                         });
@@ -97,14 +99,16 @@
                             }, 0, false);
                         });
                         scope.$on(TableEvents.clearSelection, function(evt, data) {
-                            if( !data || !data.tableId ) {
+                            if (!data || !data.tableId) {
                                 $log.error("A tableId parameter is required to clear selection.");
                                 return;
                             }
-                            if( scope.selection && data.tableId && data.tableId === tableId ) {
+                            if (scope.selection && data.tableId && data.tableId === tableId) {
                                 scope.selection.clearSelected();
                                 $timeout(function() {
-                                    elm.find("tbody tr.selected").removeClass('selected');
+                                    elm.find("tbody tr.selected").each(function() {
+                                        this.classList.remove('selected');
+                                    });
                                 }, 0, false);
                             }
                         });

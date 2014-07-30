@@ -8,7 +8,7 @@
         return {
             link: function(scope, el, attrs) {
                 var msg = (attrs.tableEmptyMessage !== '') ? attrs.tableEmptyMessage : 'No items.';
-                var tr = $("<tr/>");
+                var tr = $('<tr class="empty-msg"><div>' + msg + '</div></tr>');
                 var emptyToggleFn = function(val) {
                     if (!val || val.length === 0) {
                         tr.show();
@@ -21,12 +21,10 @@
                     if( modelData === undefined ) {
                         $log.warn("no model data found.");
                     }
-                    var body = el.find("tbody");
-                    var rowCount = body.find("tr").length;
-                    tr.addClass("empty-msg");
-                    tr.html("<div>" + msg + "</div>");
+                    var tbody = el.find("tbody");
+                    var rowCount = tbody.find("tr").length;
                     tr.hide();
-                    body.append(tr);
+                    tbody.append(tr);
                     if( rowCount === 0 ) {
                         tr.show();
                     }

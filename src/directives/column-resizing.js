@@ -11,7 +11,7 @@
      * 
      * @param {constant} TableAttributes Constants for the fixed column attributes
      */
-    module.directive("tableColumnsResizable", function($timeout, TableAttributes) {
+    module.directive("tableColumnsResizable", function($timeout, $document, TableAttributes) {
         var findXDistance = function(evt, elm) {
             var x = evt.offsetX;
             // Firefox does not recognize the offsetX property
@@ -22,6 +22,7 @@
         };
         return {
             link: function(scope, el, attrs) {
+                var body = $($document[0].body);
                 $timeout(function() {
                     var p = $(el).closest(".tableWrapper");
                     var last = el.find("thead th:last-child()")[0];
@@ -58,10 +59,10 @@
                         }
                         var s_x = evt.screenX;
                         var current = $(evt.currentTarget);
-                        var cursor = $("body").css("cursor");
+                        var cursor = body.css("cursor");
                         // Add mouse move if the target is eligible for drag
                         current.mousemove(function(evtUp) {
-                            $("body").css("cursor", "col-resize");
+                            body.css("cursor", "col-resize");
                             var delta = evtUp.screenX - s_x;
                             s_x = evtUp.screenX;
                             var w_x = target.outerWidth() + delta;
@@ -74,7 +75,7 @@
 
                         });
                         current.mouseup(function(evt2) {
-                            $("body").css("cursor", cursor);
+                            body.css("cursor", cursor);
                             current.off("mousemove");
                             current.off("mouseup");
                         });

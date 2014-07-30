@@ -22,7 +22,7 @@ var RepeaterUtilities = function($) {
         var repeater = tbody.find("tr:first-child()");
         var r = repeater.attr("ng-repeat");
         if (!r || r === "") {
-            r = repeater.attr("data-ng-repeat");
+            r = repeater.data("ng-repeat");
         }
         var findText = function(s) {
             if (s) {
