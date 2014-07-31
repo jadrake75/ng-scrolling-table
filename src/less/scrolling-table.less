@@ -8,14 +8,16 @@
     left: 0;
     right: 0;
     bottom: 0px;
+    border-left: 1px @color-table-cellBorder solid;
+    border-right: 1px @color-table-cellBorder solid;
 
     .scroller {
         position: relative;
+        height: 100%;
         overflow-y: auto;
         overflow-x: hidden;
         background-color: @color-background;
         border-bottom: 1px @color-table-cellBorder solid;
-
         td {
             border: @table-border-tablecell;
             overflow: hidden;
@@ -35,8 +37,6 @@
             }
         }
         .empty-msg {
-            border-left: @table-border-tablecell;
-            border-right: @table-border-tablecell;
             .user-select();
             div {
                 padding: 5px 10px;

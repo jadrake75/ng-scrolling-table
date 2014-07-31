@@ -156,9 +156,11 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
         function calculateScrollerHeight(tableWrapper) {
             var scroller = tableWrapper.find('.scroller');
-            var thHeight = tableWrapper.find('.tableHeader').height();
-            scroller.css('max-height', (tableWrapper.height() - thHeight) + 'px');
-            $log.debug("scroller height: " + scroller.css('max-height'));
+            var header = tableWrapper.find('.tableHeader');
+            var delta = tableWrapper.height() - header.height();
+            scroller.css('max-height', (Math.max(delta, 250)) + 'px');
+            header.css("padding-right", (scroller.width() - scroller.find('table').width()) + "px");
+            //$log.debug("scroller height: " + scroller.css('max-height'));
         }
 
         /**
@@ -201,7 +203,36 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 colGroup.detach().appendTo(headerTable);
             }
             colGroup.clone().appendTo(dataTable);
-
+        }
+        
+        /**
+         * Copy attributes to the wrapper that are not table or column directives
+         * and insert a comment block of the the directives into the wrapper
+         * 
+         * @param {type} element
+         * @param {type} wrapper
+         * @returns {String}
+         */
+        function copyAttributesToWrapper(element, wrapper) {
+            var attrs = element[0].attributes;
+            var comment = '';
+            angular.forEach(attrs, function(att, index) {
+               var name = att.nodeName;
+               // check both data- and table-/col- forms
+               if( !(name.indexOf('data-table-') === 0 || name.indexOf('table-') === 0 ||
+                       name.indexOf('data-col-') === 0 || name.indexOf('col-') === 0 )) {
+                   wrapper.attr( name, att.value );
+               } else {
+                   if( comment.length === 0 ) {
+                       comment += '<!--\n';
+                   }
+                   comment += '    ' + name + '="' + att.value + '"\n';
+               }
+            });
+            if( comment.length > 0 ) {
+                comment += '-->';
+            }
+            wrapper.prepend(comment);
         }
 
         return {
@@ -225,10 +256,15 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 tbody.each(function(index, elem) {
                     $(elem).detach().appendTo(dataTable);
                 });
-
+                copyAttributesToWrapper($element, wrapper);
                 var maxHeight = $element.css('max-height');
                 if ((!maxHeight || maxHeight === 'none') && attrs.height) {
                     maxHeight = attrs.height + 'px';
+                }
+                var alwaysScroll = ( attrs.tableAlwaysScroll === 'true');
+                var scroller = wrapper.find('.scroller');
+                if( alwaysScroll ) {
+                    scroller.css( 'overflow-y', 'scroll');
                 }
                 wrapper.css({
                     'max-height': maxHeight,
@@ -284,12 +320,15 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                                 id = evt.currentTarget.id;
                             }
                             if (id === tableUUID) {
-                                calculateScrollerHeight(element);
-                                var scroller = element.find('.scroller');
-                                ensureRowIds(scroller, refIdAttribute);
-                                element.find('.tableHeader').css("padding-right", (scroller.width() - scroller.find('table').width()) + "px");
+                                processFn(element, refIdAttribute);
                             }
                         };
+                        var processFn = function(element,refIdAttribute) {
+                            calculateScrollerHeight(element);
+                            ensureRowIds(element, refIdAttribute);
+                        };
+                        
+                        processFn(element, refIdAttribute);
                         $("#" + tableUUID).resize(calcFn);
 
                         trackRowChanges(tableUUID, scope);

@@ -31,14 +31,15 @@
             <div style="margin-top: 3em;">5 Rows - 22 Columns
                 <br/>
             <img src="../dist/resources/images/edit-column-icon.png" alt="menu" data-table-visibility-menu="" style="float:left;"/>
-            
             <br/>
+            <p> </p>
+            
             <table
                 data-table-scrolling-table
                 data-table-empty-message="No items found."
                 data-table-columns-resizable
-                data-table-selector data-multi-select="false"
-                style="width: 100%; ">
+                data-table-selector data-table-multi-select="false"
+                style="width: 100%; max-height:100px; ">
                 <thead>
                     <tr>
                         <th data-column-sortable class="name" data-col="rate">Your Name</th>
@@ -99,12 +100,13 @@
             <div id="fiftyRows" style="margin-top: 3em;">50 Rows - 22 Columns (hover over columns 3 thru 5 to highlight columns)
             <img src="../dist/resources/images/table-delete-row-icon.png" alt="clear selection" ng-click="clearSelection('fiftyRows')"  style="float:right;"/>
                 <img src="../dist/resources/images/edit-column-icon.png" alt="menu" data-table-visibility-menu="" style="float:right;"/>
-            <br/>
+                <p> </p>
             <table
                 data-table-scrolling-table
-                data-table-selector data-multi-select="true"
+                data-table-selector data-table-multi-select="true"
                 data-table-columns-resizable
                 data-table-empty-message="No items found."
+                data-table-always-scroll="true"
                 style="width: 100%; max-height: 250px;">
                 <thead>
                     <tr>
@@ -191,7 +193,6 @@
             <table
                 data-table-scrolling-table
                 data-table-empty-message="No items found."
-                data-data="emptyValues"
                 data-table-columns-resizable
                 style="width: 100%; max-height: 250px;">
                 <thead>
@@ -212,6 +213,7 @@
                 </tbody>
             </table>
             <button ng-click="addEmptyRow()">Add row</button>
+            <button ng-click="clearEmptyRows()" ng-disabled="emptyValues.length === 0">Clear rows</button>
         </div>
         
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>

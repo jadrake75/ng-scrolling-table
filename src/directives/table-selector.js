@@ -56,7 +56,9 @@
                                     selectedRows.push(id);
                                 }
                                 if (scope.$emit) {
-                                    scope.$emit(TableEvents.selection, selectedRows);
+                                    scope.$emit(TableEvents.selection, {
+                                        selected: selectedRows
+                                    });
                                 }
                                 return cleared;
                             }
@@ -66,7 +68,7 @@
                     link: function(scope, elm, attrs) {
                         var tableId = ScrollingTableHelper.getIdOfContainingTable(elm);
                         var refIdAttribute = (typeof attrs.refId !== 'undefined') ? attrs.refId : TableAttributes.refId;
-                        var multiSelect = (typeof attrs.multiSelect !== 'undefined' && attrs.multiSelect === "true");
+                        var multiSelect = (typeof attrs.tableMultiSelect !== 'undefined' && attrs.tableMultiSelect === "true");
                         scope.selection.setMultiSelect(multiSelect);
                         elm.on('click', 'td', function(e) {
                             var row = $(e.currentTarget).closest('tr');
@@ -90,7 +92,7 @@
                                         angular.forEach(rows, function(r) {
                                             var _r = $(r);
                                             if (_r.attr(refIdAttribute) === clearingRow) {
-                                                _r.get().classList.remove('selected');
+                                                r.classList.remove('selected');
                                             }
                                             ;
                                         });

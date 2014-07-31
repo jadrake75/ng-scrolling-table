@@ -21,8 +21,8 @@
                 }, 500);
 
 
-                $scope.$on(TableEvents.selection, function(evt, sRows) {
-                    $scope.currentSelection = sRows;
+                $scope.$on(TableEvents.selection, function(evt, data) {
+                    $scope.currentSelection = data.selected;
                 });
 
                 $scope.clearSelection = function(wrapperId) {
@@ -37,6 +37,9 @@
                 };
                 $scope.addEmptyRow = function() {
                     $scope.emptyValues.push({'name': 'Person-' + (new Date()).getTime(), 'phoneNumber': '777-777-7777'});
+                };
+                $scope.clearEmptyRows = function() {
+                    $scope.emptyValues.splice(0, $scope.emptyValues.length);
                 };
                 
                 $scope.removeRow = function() {
