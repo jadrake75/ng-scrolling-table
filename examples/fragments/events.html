@@ -1,0 +1,44 @@
+<div>
+    <div class="tag-documentation" id="events">
+        <h1>TableEvents</h1>
+        <span class="tag-type">constant in ng-scrolling-table</span>
+        Provides constants for the emitted events by various directives and services within the ng-scrolling-table module.
+        <h3>Events</h3>
+        <table class="arguments">
+            <tr>
+                <th>Constant</th><th>String Value</th><th>Details</th>
+            </tr>
+            <tr>
+                <td>insertRows</td>
+                <td>insert-rows</td>
+                <td>Emitted when new rows are inserted into the table and detected by the table services</td>
+            </tr>
+            <tr>
+                <td>deleteRows</td>
+                <td>delete-rows</td>
+                <td>Emitted when new rows are deleted from the table and detected by the table services.  Two data fields will be included:
+                    <br/>
+                    <code>tableId</code> - the table that emitted the event<br/>
+                    <code>deleted</code> - the count of the number of rows deleted.</td>
+            </tr>
+            <tr>
+                <td>changeVisibility</td>
+                <td>change-visibility</td>
+                <td>Emitted when a column is either shown or hidden by either programmatic or user actions</td>
+            </tr>
+
+            <tr>
+                <td>selection</td>
+                <td>select</td>
+                <td>Emitted when a row(s) is selected.  The reference id of the row item will be returned as an array of all selected items in the data field</td>
+            </tr>
+            <tr>
+                <td>clearSelection</td>
+                <td>clear-selection</td>
+                <td>Emitted when all selections have been cleared.</td>
+            </tr>
+        </table>
+        
+    </div>
+
+</div>

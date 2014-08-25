@@ -1,0 +1,72 @@
+<div>
+    <div class="tag-documentation" id="table-columns">
+        <h1>table-columns-resizable</h1>
+        <span class="tag-type">directive in ng-scrolling-table</span>
+        Adds the ability to define columns as resizeable within the table.  By default all non-fixed width columns (those not marked as <code>column-fixed="true"</code>) will be configured to support resizing.
+        <h3>Applicable Tags</h3>
+        <ul>
+            <li>TABLE</li>
+        </ul>
+    </div>
+    <div class="tag-documentation" id="column-fixed">
+        <h1>column-fixed</h1>
+        <span class="tag-type">directive in ng-scrolling-table</span>
+        Designates a column as being fixed, preventing the resizing directive from adding resize handle support for the column.
+        <h3>Applicable Tags</h3>
+        <ul>
+            <li>TH</li>
+        </ul>
+        <h3>Arguments</h3>
+        <table class="arguments">
+            <tr>
+                <th>Param</th><th>Type</th><th>Details</th>
+            </tr>
+            <tr>
+                <td>column-fixed</td>
+                <td>String</td>
+                <td>If set to "true" will mark the column as fixed width and not support resizing</td>
+            </tr>
+        </table>
+    </div>
+
+
+    <div class="tag-documentation">
+        <h1>Examples</h1>
+        
+        <H3>Resizable Table with First Column Fixed</h3>
+        In the following example, the country table header is fixed at a width of 45% of the total table width, however all of the other columns are adjustable.
+        <p/>
+        <table
+            data-table-scrolling-table
+            data-table-columns-resizable
+            class="table-small">
+            <colgroup>
+                <col width="45%"/>
+                <col/>
+                <col/>
+                <col/>
+                <col/>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th column-fixed="true">Country</th>
+                    <th>Gold</th>
+                    <th>Silver</th>
+                    <th>Bronze</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody >
+                <tr data-ng-repeat="m in medalCount| orderBy:sortField track by $index" ref-id="{{m.country_id}}">
+                    <td>{{m.country_name}}</td>
+                    <td>{{m.gold_count}}</td>
+                    <td>{{m.silver_count}}</td>
+                    <td>{{m.bronze_count}}</td>
+                    <td>{{m.medal_count}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>

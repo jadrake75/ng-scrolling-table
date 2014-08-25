@@ -25,10 +25,12 @@
                 background-color: darken(@color-highlight-hover, 7%);
                 border-color: darken(@color-highlight-hover, 2%);
             }
+            .user-select(none);
         }
         tr {
             display: table-row;
             color: @color-text;
+            .user-select(none);
             &:hover {
                 background-color: @color-highlight-hover;
             }
