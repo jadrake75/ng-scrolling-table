@@ -44,7 +44,12 @@ body {
 .example .side-nav {
     flex: 0.5 250px;
     order: 1;
-    background-color: #0b97c4
+    background-color: #0b97c4;
+        box-shadow: 1px 1px 2px #779;
+}
+
+.example .side-nav > ul {
+    padding-left: 10px;
 }
 
 .example .side-nav li {
@@ -52,7 +57,7 @@ body {
     padding-bottom: 5px;
 }
 .example .side-nav a {
-    color: #77d8d8;
+    color: #40408f;
     cursor: pointer;
     text-decoration: none;
 }
