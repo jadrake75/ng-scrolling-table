@@ -1,5 +1,4 @@
-### ** NOT READY FOR USE YET **
-Please wait until the 1.0 milestone release for using in any projects.  APIs (including directives) are subject to change until this release is finalized.
+__Note: Please wait until the 1.0 milestone release for using in any projects.  APIs (including directives) are subject to change until this release is finalized.__
 
 
 # ng-scrolling-table
