@@ -25,6 +25,7 @@
     ".bowerrc",
     ".gitattributes",
     "package.json",
+    "bower.json",
     "README.md"
   ]
 }
