@@ -1,0 +1,135 @@
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
+.tableWrapper {
+  width: 100%;
+  position: relative;
+  top: 0px;
+  left: 0;
+  right: 0;
+  bottom: 0px;
+  border-left: 1px #d9d9d9 solid;
+  border-right: 1px #d9d9d9 solid;
+}
+.tableWrapper .scroller {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #ffffff;
+  border-bottom: 1px #d9d9d9 solid;
+}
+.tableWrapper .scroller td {
+  border: 1px #d9d9d9 solid;
+  overflow: hidden;
+}
+.tableWrapper .scroller td.col-highlight {
+  background-color: #bbd0d9;
+  border-color: #cbdbe2;
+}
+.tableWrapper .scroller tr {
+  display: table-row;
+  color: #000000;
+}
+.tableWrapper .scroller tr:hover {
+  background-color: #d2e0e6;
+}
+.tableWrapper .scroller tr.selected {
+  background-color: #deeaf2;
+}
+.tableWrapper .scroller .empty-msg {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.tableWrapper .scroller .empty-msg div {
+  padding: 5px 10px;
+  font-style: italic;
+  width: 250px;
+}
+.tableWrapper .scroller .empty-msg div::selector {
+  background: none;
+}
+.tableWrapper .scroller .empty-msg:hover {
+  background-color: transparent;
+}
+.tableWrapper .tableHeader {
+  overflow: hidden;
+  background: #ffffff;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #d9d9d9), color-stop(1, #ffffff));
+  background: -ms-linear-gradient(bottom, #d9d9d9, #ffffff);
+  background: -moz-linear-gradient(center bottom, #d9d9d9 0%, #ffffff 100%);
+  background: -o-linear-gradient(#ffffff, #d9d9d9);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#d9d9d9', GradientType=0);
+}
+.tableWrapper .tableHeader tr {
+  background-color: transparent;
+  border: 1px #d9d9d9 solid;
+  border-bottom: none;
+}
+.tableWrapper .tableHeader tr th {
+  font-weight: normal;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-left: 1px #d9d9d9 solid;
+  overflow: hidden;
+}
+.tableWrapper .tableHeader tr th:first-child {
+  border-left: none;
+}
+.tableWrapper .tableHeader tr th:hover {
+  text-shadow: 1px 1px #f5f5f5;
+}
+.tableWrapper table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  table-layout: fixed;
+}
+.tableWrapper tr {
+  background-color: #ffffff;
+}
+.tableWrapper tr:nth-child(even) {
+  background-color: #fafafa;
+}
+.tableWrapper th,
+.tableWrapper td {
+  text-align: left;
+  margin: 0;
+  padding: 4px;
+}
+.col-hidden {
+  display: none;
+}
+.column-menu {
+  background-color: #fafafa;
+  border: 1px #434343 solid;
+  position: absolute;
+  overflow-y: auto;
+  width: 170px;
+  height: 125px;
+  display: none;
+  -webkit-box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.1);
+}
+.column-menu ul {
+  padding-left: 10px;
+  margin: 5px 0;
+}
+.column-menu ul li {
+  list-style: none;
+  font-size: 0.75em;
+}
+.minWidthHeaders {
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+}

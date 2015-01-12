@@ -1,15 +1,30 @@
 {
   "name": "ng-scrolling-table",
   "description": "A scrolling table built for AngularJS",
-  "version": "0.1.0",
+  "version": "0.9.0",
   "homepage": "https://github.com/jadrake75/ng-scrolling-table",
   "license": "MIT",
   "private": false,
   "dependencies": {
     "jquery": "1.9.x",
-    "angular": "1.3.x",
+    "angular": "1.3.x"
+  },
+  "devDependencies": {
     "angular-route": "1.3.x",
-    "angular-loader": "1.3.x",
-    "angular-mocks": "~1.3.x"
-  }
+    "angular-mocks": "~1.3.x",
+    "angular-loader": "1.3.x"
+  },
+  "ignore": [
+    "test",
+    "node_modules",
+    "src",
+    "examples",
+    "lib",
+    "Gruntfile.js",
+    ".gitignore",
+    ".bowerrc",
+    ".gitattributes",
+    "package.json",
+    "README.md"
+  ]
 }
