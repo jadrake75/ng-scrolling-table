@@ -2,7 +2,6 @@
     'use strict';
     angular.module('ng-scrolling-table.mixins', [])
             
-            // TODO: This will be moved to controllers for the directives
             .factory('stgControllerMixins', function() {
                 $.extend(true, this, {
                     filterable: function() {

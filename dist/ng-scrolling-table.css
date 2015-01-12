@@ -25,6 +25,10 @@
 .tableWrapper .scroller td {
   border: 1px #d9d9d9 solid;
   overflow: hidden;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .tableWrapper .scroller td.col-highlight {
   background-color: #bbd0d9;
@@ -33,6 +37,10 @@
 .tableWrapper .scroller tr {
   display: table-row;
   color: #000000;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .tableWrapper .scroller tr:hover {
   background-color: #d2e0e6;

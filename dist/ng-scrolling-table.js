@@ -102,7 +102,6 @@ var MouseClickObserver = function($, angular, window) {
     'use strict';
     angular.module('ng-scrolling-table.mixins', [])
             
-            // TODO: This will be moved to controllers for the directives
             .factory('stgControllerMixins', function() {
                 $.extend(true, this, {
                     filterable: function() {
@@ -697,7 +696,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
             var scroller = tableWrapper.find('.scroller');
             var header = tableWrapper.find('.tableHeader');
             var delta = tableWrapper.height() - header.height();
-            scroller.css('max-height', (Math.max(delta, 250)) + 'px');
+            scroller.css('max-height', (Math.min(delta, 250)) + 'px');
             header.css("padding-right", (scroller.width() - scroller.find('table').width()) + "px");
             //$log.debug("scroller height: " + scroller.css('max-height'));
         }
@@ -783,7 +782,6 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                         '<div class="tableHeader"><table></table></div>' +
                         '<div class="scroller"><table></table></div>' +
                         '</div>');
-
                 var headerTable = $(wrapper.find('.tableHeader table')[0]);
                 var dataTable = $(wrapper.find('.scroller table')[0]);
                 var thead = $element.find('thead');
@@ -840,6 +838,12 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                     post: function(scope, element, attrs) {
                         var refIdAttribute = (typeof attrs.refId !== 'undefined') ? attrs.refId : TableAttributes.refId;
                         var cloneHead = element.find('.tableHeader thead').first().clone();
+                        // angularJS will update the classes so we need to re-apply the tableWrapper class to the wrapping DIV
+                        var classes = element.attr('class');
+                        if(!classes ) {
+                            classes = '';
+                        }
+                        element.attr('class', 'tableWrapper ' + classes);
                         // we can likely remove the min-width on the headers
                         var allMinWidthHeaders = cloneHead.find('th');
                         element.append(cloneHead);
