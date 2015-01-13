@@ -299,6 +299,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                     },
                     post: function(scope, element, attrs) {
                         var refIdAttribute = (typeof attrs.refId !== 'undefined') ? attrs.refId : TableAttributes.refId;
+                        var tableEditable = ( attrs.contenteditable && attrs.contenteditable === "true");
                         var cloneHead = element.find('.tableHeader thead').first().clone();
                         // angularJS will update the classes so we need to re-apply the tableWrapper class to the wrapping DIV
                         var classes = element.attr('class');
@@ -313,7 +314,12 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                         var minLen = allMinWidthHeaders.length;
                         for (var i = 0; i < minLen ; i++) {
                             var width = $(allMinWidthHeaders[i]).width() + 'px';
-                            element.find('.tableHeader th:nth-child(' + (i + 1) + ')').css("minWidth", width);
+                            var th = element.find('.tableHeader th:nth-child(' + (i+1) + ')');
+                            th.css('minWidth', width);
+                            if(tableEditable) {
+                                th.attr('contenteditable','false');
+                            }
+
                         }
                         cloneHead.remove();
                         var calcId;
