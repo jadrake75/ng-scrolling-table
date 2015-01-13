@@ -22,7 +22,7 @@
   background-color: #ffffff;
   border-bottom: 1px #d9d9d9 solid;
 }
-.tableWrapper .scroller td {
+.tableWrapper .scroller tbody td {
   border: 1px #d9d9d9 solid;
   overflow: hidden;
   -webkit-user-select: none;
@@ -30,11 +30,11 @@
   -ms-user-select: none;
   user-select: none;
 }
-.tableWrapper .scroller td.col-highlight {
+.tableWrapper .scroller tbody td.col-highlight {
   background-color: #bbd0d9;
   border-color: #cbdbe2;
 }
-.tableWrapper .scroller tr {
+.tableWrapper .scroller tbody tr {
   display: table-row;
   color: #000000;
   -webkit-user-select: none;
@@ -42,27 +42,39 @@
   -ms-user-select: none;
   user-select: none;
 }
-.tableWrapper .scroller tr:hover {
+.tableWrapper .scroller tbody tr:hover {
   background-color: #d2e0e6;
 }
-.tableWrapper .scroller tr.selected {
+.tableWrapper .scroller tbody tr.selected {
   background-color: #deeaf2;
 }
-.tableWrapper .scroller .empty-msg {
+.tableWrapper .scroller tbody .empty-msg {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
-.tableWrapper .scroller .empty-msg div {
+.tableWrapper .scroller tbody .empty-msg div {
   padding: 5px 10px;
   font-style: italic;
   width: 250px;
 }
-.tableWrapper .scroller .empty-msg div::selector {
+.tableWrapper .scroller tbody .empty-msg div::selector {
   background: none;
 }
-.tableWrapper .scroller .empty-msg:hover {
+.tableWrapper .scroller tbody .empty-msg:hover {
+  background-color: transparent;
+}
+.tableWrapper .tableFooter {
+  overflow: hidden;
+  background: #ffffff;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #d9d9d9), color-stop(1, #ffffff));
+  background: -ms-linear-gradient(bottom, #d9d9d9, #ffffff);
+  background: -moz-linear-gradient(center bottom, #d9d9d9 0%, #ffffff 100%);
+  background: -o-linear-gradient(#ffffff, #d9d9d9);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#d9d9d9', GradientType=0);
+}
+.tableWrapper .tableFooter tr {
   background-color: transparent;
 }
 .tableWrapper .tableHeader {
