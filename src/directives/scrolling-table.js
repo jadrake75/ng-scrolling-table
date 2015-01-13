@@ -210,8 +210,8 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
          * copy appropriate attributes to the wrapper element.  By default, the order of table elements would be
          *
          * TABLE
-         * --COLGROUP
          * --CAPTION
+         * --COLGROUP
          * --THEAD
          * --TFOOT
          * --TBODY
