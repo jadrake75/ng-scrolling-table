@@ -40,6 +40,9 @@ If you have growl installed you will get test notification changes.  The test ta
 __Build status:__
 * [![Build Status](http://ec2-54-186-51-9.us-west-2.compute.amazonaws.com:8080/buildStatus/icon?job=ng-scrolling-table live demo)](http://ec2-54-186-51-9.us-west-2.compute.amazonaws.com:8080/job/ng-scrolling-table%20live%20demo/)
 
+__Design thoughts:__
+Notes on the design approach and thoughts are now being captured in the wiki document located [Here](https://github.com/jadrake75/ng-scrolling-table/wiki)
+
 __Contributors:__
 
 ng-scrolling-table Team:
