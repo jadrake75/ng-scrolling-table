@@ -597,7 +597,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
          * @param {type} refIdAttribute  The reference ID attribute
          */
         function ensureRowIds(content, refIdAttribute) {
-            var trs = content.find('.scroller tr');
+            var trs = content.find('.scroller tbody tr');
             trs.each(function(index, trElem) {
                 var tr = $(trElem);
                 if (tr.attr(refIdAttribute) === undefined) {
@@ -635,7 +635,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
             });
             var table = $("#" + tableId);
             if (table.length > 0) {
-                obs.observe(table.find(" tbody").get(0), {
+                obs.observe(table.find("tbody").get(0), {
                     childList: true
                 });
             }
@@ -695,10 +695,10 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
         function calculateScrollerHeight(tableWrapper) {
             var scroller = tableWrapper.find('.scroller');
             var header = tableWrapper.find('.tableHeader');
-            var delta = tableWrapper.height() - header.height();
+            var footer = tableWrapper.find('.tableFooter');
+            var delta = tableWrapper.height() - header.height() - footer.height();
             scroller.css('max-height', (Math.min(delta, 250)) + 'px');
             header.css("padding-right", (scroller.width() - scroller.find('table').width()) + "px");
-            //$log.debug("scroller height: " + scroller.css('max-height'));
         }
 
         /**
@@ -742,6 +742,91 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
             }
             colGroup.clone().appendTo(dataTable);
         }
+
+        /**
+         * Reparent all of the key table elements into the wrapper tables as well as process the column groups and
+         * copy appropriate attributes to the wrapper element.  By default, the order of table elements would be
+         *
+         * TABLE
+         * --CAPTION
+         * --COLGROUP
+         * --THEAD
+         * --TFOOT
+         * --TBODY
+         *
+         * Upon successful reparenting the following should be present:
+         *
+         * DIV
+         * --DIV TABLE (.tableHeader)
+         * ----CAPTION
+         * ----COLGROUP
+         * ----THEAD
+         * --DIV TABLE (.scroller)
+         * ----COLGROUP
+         * ----TBODY
+         * --DIV TABLE (.tableFooter)  ** Only if tfootElm is defined
+         * ----TFOOT
+         *
+         * The table header (including the caption) and the table footer (if present) will remain fixed while the
+         * scroller will support scrolling through the results.
+         *
+         * @param $element  The table tag starting from
+         * @param wrapper   The div wrapper element being augmented
+         * @param headerTable   The table representing the THEAD table
+         * @param dataTable     The table representing the TBODY table
+         */
+        function reparentPrimaryElements($element, wrapper, headerTable, dataTable) {
+            var thead; // will initialize from children
+            var tbody; // will initialize from children
+            var captionElm;
+            var tfootElm;
+            var children = $element.children();
+            for(var i = 0; i < children.length; i++ ) {
+                var tagName = children[i].tagName;
+                switch(tagName) {
+                    case 'TFOOT':
+                        tfootElm = children[i];
+                        break;
+                    case 'CAPTION':
+                        captionElm = children[i];
+                        break;
+                    case 'THEAD':
+                        if( thead ) {
+                            $log.warn("Multiple THEAD elements found in table.");
+                            break;
+                        }
+                        thead = $(children[i]);
+                        break;
+                    case 'TBODY':
+                        if( tbody ) {
+                            $log.warn("Multiple TBODY elements found in table.");
+                            break;
+                        }
+                        tbody = $(children[i]);
+                        break;
+                    case 'COLGROUP':
+                        break;
+                    default:
+                        $log.warn("Unexpected element '" + tagName + "' found within the TABLE element.");
+                }
+            }
+            handleColGroups($element, headerTable, dataTable, thead, tbody);
+            thead.each(function(index, elem) {
+                $(elem).detach().appendTo(headerTable);
+            });
+            tbody.each(function(index, elem) {
+                $(elem).detach().appendTo(dataTable);
+            });
+            if( captionElm ) {
+                $(captionElm).detach().prependTo(headerTable);
+            }
+            if( tfootElm ) {
+                $(tfootElm).detach().appendTo($(wrapper.find('.tableFooter table')[0]));
+            } else {
+                $(wrapper.find('.tableFooter')).remove();
+            }
+            copyAttributesToWrapper($element, wrapper);
+        }
         
         /**
          * Copy attributes to the wrapper that are not table or column directives
@@ -781,19 +866,11 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 var wrapper = $('<div class="tableWrapper" id="' + guid() + '">' +
                         '<div class="tableHeader"><table></table></div>' +
                         '<div class="scroller"><table></table></div>' +
+                        '<div class="tableFooter"><table></table></div>' +
                         '</div>');
                 var headerTable = $(wrapper.find('.tableHeader table')[0]);
                 var dataTable = $(wrapper.find('.scroller table')[0]);
-                var thead = $element.find('thead');
-                var tbody = $element.find('tbody');
-                handleColGroups($element, headerTable, dataTable, thead, tbody);
-                thead.each(function(index, elem) {
-                    $(elem).detach().appendTo(headerTable);
-                });
-                tbody.each(function(index, elem) {
-                    $(elem).detach().appendTo(dataTable);
-                });
-                copyAttributesToWrapper($element, wrapper);
+                reparentPrimaryElements($element, wrapper, headerTable, dataTable);
                 var maxHeight = $element.css('max-height');
                 if ((!maxHeight || maxHeight === 'none') && attrs.height) {
                     maxHeight = attrs.height + 'px';
@@ -813,7 +890,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 // Regex strips illegal markup from element
                 //   which causes render failures in IE
                 var regexOnlyTagData = '<.*>';
-                var headerRows = headerTable.find('tr');
+                var headerRows = headerTable.find('thead tr');
                 var headersElemArray = [];
                 headerRows.children().each(function(index, wrapper) {
                     headersElemArray.push(wrapper.outerHTML.match(regexOnlyTagData)[0]);
@@ -821,14 +898,13 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 headerRows.empty();
                 headerRows.append($(headersElemArray.join('')));
 
-                var bodyRows = dataTable.find('tr');
+                var bodyRows = dataTable.find('tbody tr');
                 var bodyElemArray = [];
                 bodyRows.children().each(function(index, wrapper) {
                     bodyElemArray.push(wrapper.outerHTML.match(regexOnlyTagData)[0]);
                 });
                 bodyRows.empty();
                 bodyRows.append($(bodyElemArray.join('')));
-
                 return {
                     // Will run BEFORE child directives.
                     pre: function(scope, element, attrs) {
