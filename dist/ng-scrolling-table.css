@@ -141,3 +141,15 @@
   overflow: hidden;
   position: absolute;
 }
+.columnDrag {
+  box-shadow: inset 0 0 1em 1em rgba(0, 0, 0, 0.15);
+}
+.dropLeft {
+  box-shadow: inset 1em 0px 1em -0.5em rgba(0, 0, 0, 0.6);
+}
+.dropCenter {
+  box-shadow: inset 0em 0px 0.5em 0.5em rgba(0, 0, 0, 0.6);
+}
+.dropRight {
+  box-shadow: inset -1em 0px 1em -0.5em rgba(0, 0, 0, 0.6);
+}

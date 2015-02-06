@@ -10,7 +10,30 @@
         };
 
         return {
-            controller: function($scope) {
+            controller: function($scope, $element) {
+                var swapEnabled = false;
+                var ctrl = this;
+
+                this.isSwapEnabled = function() {
+                    return !!swapEnabled;
+                };
+
+                this.maxSideDropSize = function() {
+                    return 25;
+                };
+
+                var tableElems = [];
+                if ($element) {
+                    if ($element[0].tagName === 'TABLE') {
+                        tableElems.push($element[0]);
+                    } else {
+                        var tables = $element[0].querySelectorAll('table');
+                        for (var i = 0; i < tables.length; i++) {
+                            tableElems.push(tables[i]);
+                        }
+                    }
+                }
+
                 var templateMapper = {};
 
                 this.getTemplate = function(rowId) {
@@ -23,55 +46,85 @@
                     }
                 };
 
+                var reorder = function(array, newIndex, oldIndex, offset) {
+                    if (oldIndex < newIndex) {
+                        newIndex--;
+                    }
+
+                    var columnCount = array.length;
+                    if (oldIndex >= columnCount || newIndex >= columnCount) {
+                        return;
+                    }
+
+                    if (offset < 0) {
+                        // Insert Before
+                        var oldColumn = array.splice(oldIndex, 1)[0];
+                        array.splice(newIndex, 0, oldColumn);
+                    } else if (offset > 0) {
+                        // Insert After
+                        var oldColumn = array.splice(oldIndex, 1)[0];
+                        array.splice(newIndex + 1, 0, oldColumn);
+                    } else if (ctrl.isSwapEnabled()) {
+                        // Swap Column Places
+                        var oldColumn = array.splice(oldIndex, 1)[0];
+                        var newColumn = array.splice(newIndex, 1)[0];
+                        array.splice(newIndex, 0, oldColumn);
+                        array.splice(oldIndex, 0, newColumn);
+                    }
+
+                    return array;
+                };
+
                 this.reorderColumns = function(oldColIndex, newColIndex, offset) {
 
-                    if (oldColIndex === null || newColIndex === null) {
+                    if (oldColIndex === null || newColIndex === null || oldColIndex === newColIndex) {
                         return;
                     }
-
                     oldColIndex = +oldColIndex;
                     newColIndex = +newColIndex;
-
-                    if (oldColIndex < 0 || newColIndex < 0) {
+                    offset = parseInt(offset);
+                    if (oldColIndex < 0 || newColIndex < 0 || offset < -1 || offset > 1) {
+                        return;
+                    }
+                    if (!ctrl.isSwapEnabled() && offset === 0) {
                         return;
                     }
 
-                    if (oldColIndex < newColIndex) {
-                        newColIndex--;
-                    }
+                    // Reorder COL Elements
+                    tableElems.forEach(function(tableElem) {
+                        var colElems = tableElem.querySelectorAll('col');
 
+                        var reorderedColElems = angular.element(colElems);
+                        reorderedColElems = reorder(reorderedColElems, newColIndex, oldColIndex, offset);
+                        reorderedColElems = reorderedColElems.map(function(index, elem) {
+                            return elem.cloneNode();
+                        });
+                        var firstModifiedColumn = Math.min(newColIndex, oldColIndex);
+                        reorderedColElems = reorderedColElems.slice(firstModifiedColumn, Math.max(newColIndex, oldColIndex) + 1);
+
+                        reorderedColElems.each(function (index, colElement) {
+                            var colElementStyles = colElement.style;
+                            Object.keys(colElementStyles).forEach(function(styleKey) {
+                                colElems[index + firstModifiedColumn].style[styleKey] = colElementStyles[styleKey];
+                            });
+                        });
+                    });
+
+                    // Reorder Row Templates
                     Object.keys(templateMapper).forEach(function(rowId) {
                         var rowTemplate = templateMapper[rowId];
                         rowTemplate = angular.element('<tr>' + rowTemplate + '<tr>');
                         rowTemplate = angular.element(rowTemplate[0].children);
 
-                        var columnCount = rowTemplate.length;
-                        if (oldColIndex >= columnCount || newColIndex >= columnCount) {
-                            return;
-                        }
+                        var rowTemplate = reorder(rowTemplate, newColIndex, oldColIndex, offset);
+                        if (rowTemplate) {
+                            var newRowTemplate = '';
+                            for(var i = 0; i < rowTemplate.length; i++) {
+                                newRowTemplate += rowTemplate[i].outerHTML;
+                            }
 
-                        if (offset < 0) {
-                            // Insert Before
-                            var oldColumn = rowTemplate.splice(oldColIndex, 1)[0];
-                            rowTemplate.splice(newColIndex, 0, oldColumn);
-                        } else if (offset > 0) {
-                            // Insert After
-                            var oldColumn = rowTemplate.splice(oldColIndex, 1)[0];
-                            rowTemplate.splice(newColIndex + 1, 0, oldColumn);
-                        } else {
-                            // Swap Column Places
-                            var oldColumn = rowTemplate.splice(oldColIndex, 1)[0];
-                            var newColumn = rowTemplate.splice(newColIndex, 1)[0];
-                            rowTemplate.splice(newColIndex, 0, oldColumn);
-                            rowTemplate.splice(oldColIndex, 0, newColumn);
+                            templateMapper[rowId] = newRowTemplate;
                         }
-
-                        var newRowTemplate = '';
-                        for(var i = 0; i < rowTemplate.length; i++) {
-                            newRowTemplate += rowTemplate[i].outerHTML;
-                        }
-
-                        templateMapper[rowId] = newRowTemplate;
                     });
 
                     $scope.$broadcast('drawTableRows');
@@ -145,11 +198,15 @@
 
                         var getElementHoverOffset =  function(event) {
                             var boundingRect = element[0].getBoundingClientRect();
-                            var hoverSectionWidth = boundingRect.width / 3;
+                            var hoverSectionWidth = boundingRect.width / 2;
+                            if (ReorderColCtrl.isSwapEnabled()) {
+                                hoverSectionWidth = boundingRect.width / 3;
+                            }
+                            hoverSectionWidth = Math.min(hoverSectionWidth, ReorderColCtrl.maxSideDropSize());
                             if (event.pageX < (boundingRect.left + hoverSectionWidth)) {
                                 // Left 1/3 of Element
                                 return -1;
-                            } else if (event.pageX > (boundingRect.left + hoverSectionWidth + hoverSectionWidth)) {
+                            } else if (event.pageX > (boundingRect.left + boundingRect.width - hoverSectionWidth)) {
                                 // Right 1/3 of element
                                 return 1;
                             } else {
@@ -180,7 +237,7 @@
                                     element.addClass('dropLeft');
                                 } else if (elementHoverOffset > 0) {
                                     element.addClass('dropRight');
-                                } else {
+                                } else if (ReorderColCtrl.isSwapEnabled()) {
                                     element.addClass('dropCenter');
                                 }
                             },

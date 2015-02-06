@@ -194,7 +194,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                         el.removeAttr("width");
                         tbody.find('td:nth-child(' + (index + 1) + ')').removeAttr("width");
                     }
-                    html += "<col " + ((w !== null) ? "width=\"" + w + "\"" : "") + "/>";
+                    html += "<col " + ((w !== null) ? 'style="width:' + w + '"' : '') + "/>";
                 });
                 html += '</colgroup>';
                 colGroup = $(html);
