@@ -199,7 +199,7 @@ var MouseClickObserver = function($, angular, window) {
         };
 
         return {
-            controller: function($scope, $element) {
+            controller: ["$scope","$element", function($scope, $element) {
                 var swapEnabled = false;
                 var ctrl = this;
 
@@ -319,7 +319,7 @@ var MouseClickObserver = function($, angular, window) {
                     $scope.$broadcast('drawTableRows');
                 }
 
-            },
+            }],
             compile: function($element, $attrs) {
                 var headerRow = $element[0].querySelector('thead tr');
                 headerRow.setAttribute('reorderable-column-template-mapper', getId());
@@ -340,7 +340,7 @@ var MouseClickObserver = function($, angular, window) {
         }
     });
 
-    module.directive('reorderableColumnTemplateMapper', function($compile) {
+    module.directive('reorderableColumnTemplateMapper', ["$compile", function($compile) {
         return {
             require: '^reorderableColumns',
             compile: function($element, $attrs) {
@@ -369,9 +369,9 @@ var MouseClickObserver = function($, angular, window) {
 
             }
         }
-    });
+    }]);
 
-    module.directive('reorderableHeaderDragDrop', function(nzEventHelper) {
+    module.directive('reorderableHeaderDragDrop', ["nzEventHelper", function(nzEventHelper) {
         return {
             require: '^reorderableColumns',
             compile: function($element, $attrs) {
@@ -464,7 +464,7 @@ var MouseClickObserver = function($, angular, window) {
 
             }
         }
-    });
+    }]);
 
 })(angular);
 //End of file
@@ -481,7 +481,7 @@ var MouseClickObserver = function($, angular, window) {
      * 
      * @param {constant} TableAttributes Constants for the fixed column attributes
      */
-    module.directive("tableColumnsResizable", function($timeout, $document, TableAttributes) {
+    module.directive("tableColumnsResizable", ["$timeout","$document","TableAttributes", function($timeout, $document, TableAttributes) {
         var findXDistance = function(evt, elm) {
             var x = evt.offsetX;
             // Firefox does not recognize the offsetX property
@@ -555,14 +555,14 @@ var MouseClickObserver = function($, angular, window) {
 
             }
         };
-    });
+    }]);
 })(angular, jQuery, Math);
 //End of file
 (function(angular, $, MouseClickObserver, Math) {
     "use strict";
 
     var module = angular.module("table.column-visibility", ["table.scrolling-table"]);
-    module.factory("ColumnVisibilityService", function($timeout) {
+    module.factory("ColumnVisibilityService", ["$timeout", function($timeout) {
         this.setColumnVisibility = function(tableId, index, showColumn) {
             // Currently setting visibility on the COL tag is not supported, so we 
             // are forced to use classes on the TD and TRs
@@ -603,21 +603,21 @@ var MouseClickObserver = function($, angular, window) {
             }
         };
         return this;
-    });
-    module.directive("tableVisibilityMenu", function($compile, $timeout, $document, $window, ColumnVisibilityService, ScrollingTableHelper) {
+    }]);
+    module.directive("tableVisibilityMenu", ["$compile","$timeout","$document","$window","ColumnVisibilityService","ScrollingTableHelper", function($compile, $timeout, $document, $window, ColumnVisibilityService, ScrollingTableHelper) {
         var findHidden = function(tableId, col) {
             return $("#" + tableId + " th:nth-child(" + (col + 1) + ")").hasClass("col-hidden");
         };
 
         return {
             restrict: 'AE',
-            controller: function($scope) {
+            controller: ["$scope", function($scope) {
                 $scope.toggleVisibilityCallback = function(tableId, col) {
                     var hidden = findHidden(tableId, col);
                     ColumnVisibilityService.setColumnVisibility(tableId, col, hidden);
                     $scope.colVisibilityModel["col-" + col] = hidden;
                 };
-            },
+            }],
             link: function(scope, el, attrs) {
                 $(el).on("click", function() {
                     $timeout(function() {
@@ -657,8 +657,8 @@ var MouseClickObserver = function($, angular, window) {
                 });
             }
         };
-    });
-    module.directive("colVisibility", function($log, ScrollingTableHelper, ColumnVisibilityService, TableEvents) {
+    }]);
+    module.directive("colVisibility", ["$log","ScrollingTableHelper","ColumnVisibilityService","TableEvents", function($log, ScrollingTableHelper, ColumnVisibilityService, TableEvents) {
         return {
             restrict: "A",
             link: function(scope, el, attrs) {
@@ -694,7 +694,7 @@ var MouseClickObserver = function($, angular, window) {
                 }
             }
         };
-    });
+    }]);
 })(angular, jQuery, MouseClickObserver, Math);
 //End of file
 (function(angular, $, RepeaterUtilities) {
@@ -702,7 +702,7 @@ var MouseClickObserver = function($, angular, window) {
     'use strict';
 
     var module = angular.module('table.empty-table', []);
-    module.directive('tableEmptyMessage', function($timeout, $log) {
+    module.directive('tableEmptyMessage', ["$timeout","$log", function($timeout, $log) {
        
         return {
             link: function(scope, el, attrs) {
@@ -733,7 +733,7 @@ var MouseClickObserver = function($, angular, window) {
                 },0, false);
             }
         };
-    });
+    }]);
 })(angular, jQuery, RepeaterUtilities);
 //End of file
 (function(angular, $) {
@@ -742,7 +742,7 @@ var MouseClickObserver = function($, angular, window) {
 
     var tables = angular.module('table.highlightColumn', ["table.scrolling-table"]);
 
-    tables.directive('colHighlight', function($timeout, $log, ScrollingTableHelper, TableEvents) {
+    tables.directive('colHighlight', ["$timeout","$log","ScrollingTableHelper","TableEvents", function($timeout, $log, ScrollingTableHelper, TableEvents) {
 
         /**
          * Track new insertions of TRs into the TBODY and specify for the
@@ -797,7 +797,7 @@ var MouseClickObserver = function($, angular, window) {
                 }
             }
         };
-    });
+    }]);
 
 })(angular, jQuery);
 //End of file
@@ -869,7 +869,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
         columnFixed: 'col-fixed'
     });
 
-    tables.directive('tableScrollingTable', function($timeout, $log, $document, $compile, ScrollingTableHelper, TableAttributes, TableEvents) {
+    tables.directive('tableScrollingTable', ["$timeout","$log","$document","$compile","ScrollingTableHelper","TableAttributes","TableEvents", function($timeout, $log, $document, $compile, ScrollingTableHelper, TableAttributes, TableEvents) {
 
         /**
          * Will ensure that each table row has reference attribute as defined by the refIdAttribute.
@@ -1167,7 +1167,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 };
             }
         };
-    });
+    }]);
 
 })(angular, jQuery, Math, MutationObserver);
 //End of file
@@ -1186,10 +1186,10 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
              * @param {type} $timeout
              * @returns {} The directive instance.
              */
-            .directive('tableSelector', function($timeout, $log, TableEvents, TableAttributes, ScrollingTableHelper) {
+            .directive('tableSelector', ["$timeout","$log","TableEvents","TableAttributes","ScrollingTableHelper", function($timeout, $log, TableEvents, TableAttributes, ScrollingTableHelper) {
 
                 return {
-                    controller: function($scope) {
+                    controller: ["$scope", function($scope) {
                         var scope = $scope.$parent;
                         var multiple = false;
                         scope.tableModel = {
@@ -1237,7 +1237,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                             }
                         };
 
-                    },
+                    }],
                     link: function(scope, elm, attrs) {
                         var tableId = ScrollingTableHelper.getIdOfContainingTable(elm);
                         var refIdAttribute = (typeof attrs.refId !== 'undefined') ? attrs.refId : TableAttributes.refId;
@@ -1292,5 +1292,5 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                         });
                     }
                 };
-            });
+            }]);
 })(angular);
