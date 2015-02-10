@@ -38,7 +38,7 @@ To execute the tests run
 If you have growl installed you will get test notification changes.  The test target on npm will automatically call bower to install any tests dependencies needed.  By default, all tests dependencies are marked as optional since the continuous build environment is not executing the tests. 
 
 __Build status:__
-* [![Build Status](http://ec2-54-186-51-9.us-west-2.compute.amazonaws.com:8080/buildStatus/icon?job=ng-scrolling-table live demo)](http://ec2-54-186-51-9.us-west-2.compute.amazonaws.com:8080/job/ng-scrolling-table%20live%20demo/)
+* [![Build Status](http://drake-server.ddns.net:9000/jenkins/buildStatus/icon?job=ng-scrolling-table)](http://drake-server.ddns.net:9000/jenkins/job/ng-scrolling-table/)
 
 __Contributors:__
 

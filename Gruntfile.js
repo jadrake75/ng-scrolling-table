@@ -27,7 +27,7 @@ module.exports = function (grunt) {
                     paths: ['src/less'],
                     cleancss: true,
                     compress: true,
-                    sourceMap: true,
+                    sourceMap: false,
                     report: 'gzip'
                 },
                 files: {
