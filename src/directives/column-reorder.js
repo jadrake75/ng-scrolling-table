@@ -19,7 +19,7 @@
                 };
 
                 this.maxSideDropSize = function() {
-                    return 25;
+                    return 50;
                 };
 
                 var tableElems = [];
