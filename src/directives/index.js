@@ -9,6 +9,7 @@
         'table.highlightColumn',
         'table.column-resizing',
         'table.column-visibility',
+        'table.column-reorder',
         'table.column-fixed'
     ]);
     

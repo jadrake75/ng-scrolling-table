@@ -49,7 +49,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
         columnFixed: 'col-fixed'
     });
 
-    tables.directive('tableScrollingTable', function($timeout, $log, $document, ScrollingTableHelper, TableAttributes, TableEvents) {
+    tables.directive('tableScrollingTable', function($timeout, $log, $document, $compile, ScrollingTableHelper, TableAttributes, TableEvents) {
 
         /**
          * Will ensure that each table row has reference attribute as defined by the refIdAttribute.
@@ -194,7 +194,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                         el.removeAttr("width");
                         tbody.find('td:nth-child(' + (index + 1) + ')').removeAttr("width");
                     }
-                    html += "<col " + ((w !== null) ? "width=\"" + w + "\"" : "") + "/>";
+                    html += "<col " + ((w !== null) ? 'style="width:' + w + '"' : '') + "/>";
                 });
                 html += '</colgroup>';
                 colGroup = $(html);
@@ -238,9 +238,11 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
         return {
             restrict: 'A',
             scope: true,
+            terminal: true,
+            priority: 1000,
             compile: function compile($element, attrs, transclude) {
 
-                var wrapper = $('<div class="tableWrapper" id="' + guid() + '">' +
+                var wrapper = $('<div class="tableWrapper" id="' + guid() + '" data-reorderable-columns>' +
                         '<div class="tableHeader"><table></table></div>' +
                         '<div class="scroller"><table></table></div>' +
                         '</div>');
@@ -296,6 +298,8 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                     pre: function(scope, element, attrs) {
                         scope.headersElemArray = headersElemArray;
                         scope.bodyElemArray = bodyElemArray;
+
+                        $compile(wrapper, null, 1000)(scope);
                     },
                     post: function(scope, element, attrs) {
                         var refIdAttribute = (typeof attrs.refId !== 'undefined') ? attrs.refId : TableAttributes.refId;
