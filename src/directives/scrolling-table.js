@@ -204,7 +204,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
             }
             colGroup.clone().appendTo(dataTable);
         }
-        
+
         /**
          * Copy attributes to the wrapper that are not table or column directives
          * and insert a comment block of the the directives into the wrapper
@@ -219,15 +219,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
             angular.forEach(attrs, function(att, index) {
                var name = att.nodeName;
                // check both data- and table-/col- forms
-               if( !(name.indexOf('data-table-') === 0 || name.indexOf('table-') === 0 ||
-                       name.indexOf('data-col-') === 0 || name.indexOf('col-') === 0 )) {
                    wrapper.attr( name, att.value );
-               } else {
-                   if( comment.length === 0 ) {
-                       comment += '<!--\n';
-                   }
-                   comment += '    ' + name + '="' + att.value + '"\n';
-               }
             });
             if( comment.length > 0 ) {
                 comment += '-->';
