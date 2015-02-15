@@ -371,7 +371,7 @@ var MouseClickObserver = function($, angular, window) {
         }
     }]);
 
-    module.directive('reorderableHeaderDragDrop', ["nzEventHelper", function(nzEventHelper) {
+    module.directive('reorderableHeaderDragDrop', ["nzEventHelper","$timeout", function(nzEventHelper, $timeout) {
         return {
             require: '^reorderableColumns',
             compile: function($element, $attrs) {
@@ -379,10 +379,17 @@ var MouseClickObserver = function($, angular, window) {
                 return {
                     pre: function (scope, element, attrs, ReorderColCtrl) {
 
-                        var removeHoverClasses = function() {
-                            element.removeClass('dropLeft');
-                            element.removeClass('dropCenter');
-                            element.removeClass('dropRight');
+                        var allDropIndicatorClasses = [
+                            'dropLeft',
+                            'dropRight',
+                            'dropCenter'
+                        ];
+                        var removeHoverClasses = function(classToRetain) {
+                            allDropIndicatorClasses.forEach(function(dropIndicatorClass) {
+                                if (classToRetain !== dropIndicatorClass) {
+                                    element.removeClass(dropIndicatorClass);
+                                }
+                            });
                         };
 
                         var getElementHoverOffset =  function(event) {
@@ -414,28 +421,36 @@ var MouseClickObserver = function($, angular, window) {
                             }
                         );
 
+                        var dragActionId;
                         nzEventHelper.registerDropHandler(element[0], 'columnReorder',
                             function(event) {
                                 // Drag Enter
                             },
                             function(event) {
-                                // Drag Over
-                                removeHoverClasses();
-                                var elementHoverOffset = getElementHoverOffset(event);
-                                if (elementHoverOffset < 0) {
-                                    element.addClass('dropLeft');
-                                } else if (elementHoverOffset > 0) {
-                                    element.addClass('dropRight');
-                                } else if (ReorderColCtrl.isSwapEnabled()) {
-                                    element.addClass('dropCenter');
-                                }
+                                $timeout.cancel(dragActionId);
+                                dragActionId = $timeout(function() {
+                                    // Drag Over
+                                    var elementHoverOffset = getElementHoverOffset(event);
+                                    var dropIndicatorClass;
+                                    if (elementHoverOffset < 0) {
+                                        dropIndicatorClass = 'dropLeft';
+                                    } else if (elementHoverOffset > 0) {
+                                        dropIndicatorClass = 'dropRight';
+                                    } else if (ReorderColCtrl.isSwapEnabled()) {
+                                        dropIndicatorClass = 'dropCenter';
+                                    }
+                                    element.addClass(dropIndicatorClass);
+                                    removeHoverClasses(dropIndicatorClass);
+                                }, 2, false);
                             },
                             function(event) {
                                 // Drag Leave
+                                $timeout.cancel(dragActionId);
                                 removeHoverClasses();
                             },
                             function(dragElement, dropElement, event) {
                                 // Drop
+                                $timeout.cancel(dragActionId);
                                 removeHoverClasses();
 
                                 var dragIndex = null;
