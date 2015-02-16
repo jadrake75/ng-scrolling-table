@@ -84,21 +84,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        compress: {
-            production: {
-                options: {
-                    archive: '<%= distdir %>/ng-scrolling-table.tar.gz'
-                },
-                files: [
-                    {
-                        "cwd": "<%= distdir %>/",
-                        "src": "./**",
-                        "dest": "ng-scrolling-table",
-                        "expand": true
-                    }
-                ]
-            }
-        },
         clean: ["<%= distdir %>"]
     });
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -106,9 +91,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-ng-annotate');
     grunt.registerTask('dev', ['concat:dev', 'copy', 'less:dev']);
-    grunt.registerTask('production', ['dev', 'ngAnnotate:dist', 'uglify:production', 'less:production', 'compress:production']);
+    grunt.registerTask('production', ['dev', 'ngAnnotate:dist', 'uglify:production', 'less:production']);
 };

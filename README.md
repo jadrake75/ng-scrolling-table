@@ -4,9 +4,6 @@ __Note: Please wait until the 1.0 milestone release for using in any projects.  
 # ng-scrolling-table
 ## An Angular Scrolling Table using HTML Tags
 
-__Download:__
-* [Latest Successful Build] (http://ec2-54-186-51-9.us-west-2.compute.amazonaws.com:8080/job/ng-scrolling-table%20live%20demo/lastSuccessfulBuild/artifact/dist/ng-scrolling-table.tar.gz)
-
 __Bower Install:__
 The library is now available in Bower and can be accessed running
 > bower install ng-scrolling-table --save
