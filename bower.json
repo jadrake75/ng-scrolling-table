@@ -28,5 +28,8 @@
     "package.json",
     "bower.json",
     "README.md"
-  ]
+  ],
+  "resolutions": {
+    "angular": "1.3.x"
+  }
 }

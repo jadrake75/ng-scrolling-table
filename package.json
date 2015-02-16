@@ -29,7 +29,7 @@
         "grunt-contrib-clean": "~0.5.0"
     },
     "scripts": {
-        "pretest": "bower install",
+        "postinstall": "bower -f install",
         "test": "karma start test/karma.conf.js",
         "test-single-run": "karma start test/karma.conf.js  --single-run"
         
