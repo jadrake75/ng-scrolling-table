@@ -5,85 +5,121 @@
 
     /**
      * Support the ability to resize columns on the table.  Placing this directive
-     * on a TABLE element will enable all columns to be resizable except for the 
+     * on a TABLE element will enable all columns to be resizable except for the
      * last column on the right.  As well any column that declares the column-fixed="true"
      * attribute will be excluded from resizing.
-     * 
+     *
      * @param {constant} TableAttributes Constants for the fixed column attributes
      */
-    module.directive("tableColumnsResizable", function($timeout, $document, TableAttributes) {
-        var findXDistance = function(evt, elm) {
-            var x = evt.offsetX;
-            // Firefox does not recognize the offsetX property
-            if (x === undefined) {
-                x = evt.pageX - elm.offset().left;
-            }
-            return x;
-        };
+    module.directive("tableColumnsResizable", function($timeout, TableAttributes, nzEventHelper) {
         return {
-            link: function(scope, el, attrs) {
-                var body = $($document[0].body);
-                $timeout(function() {
-                    var p = $(el).closest(".tableWrapper");
-                    var last = el.find("thead th:last-child()")[0];
-                    // Change the cursor on mouse moving within a TH element near
-                    // the right most limit for resizing.  
-                    // Note: col-fixed columns will not expose the handle
-                    // 
-                    // If this becomes expensive to calculate we could add a mouseenter
-                    // to add the mouse move and then remove it on exit, but this does
-                    // not seem to impact performance with over 50 columns visible.
-                    el.find("thead th").mousemove(function(evt) {
-                        var elm = $(evt.target);
-                        var w = elm.outerWidth();
-                        var x = findXDistance(evt, elm);
-                        if (last.cellIndex !== evt.target.cellIndex &&
-                                (w - x) < 10 &&
-                                !elm.hasClass(TableAttributes.columnFixed) &&
-                                elm.attr(TableAttributes.columnFixed) !== "true") {
-                            elm.css("cursor", "col-resize");
-                        } else {
-                            elm.css("cursor", "");
+            controller: function($scope, $element) {
+
+                var tableColElems = [];
+                if ($element) {
+                    if ($element[0].tagName === 'TABLE') {
+                        var tableCols = [];
+                        tableColElems.push(tableCols);
+                        var cols = $element[0].querySelectorAll('col');
+                        for (var i = 0; i < cols.length; i++) {
+                            tableCols.push(cols[i]);
                         }
-                    });
-                    // Look for a mouse down event occuring near the TH's boundary.
-                    el.find("thead tr").mousedown(function(evt) {
-                        var target = $(evt.target);
-                        var x = findXDistance(evt, target);
-                        if (last.cellIndex === evt.target.cellIndex ||
-                                target[0].nodeName !== "TH" ||
-                                target.outerWidth() - x > 10 ||
-                                target.hasClass(TableAttributes.columnFixed) ||
-                                target.attr(TableAttributes.columnFixed) === "true") {
-                            return;
+                    } else {
+                        var tables = $element[0].querySelectorAll('table');
+                        for (var tableIndex = 0; tableIndex < tables.length; tableIndex++) {
+                            var tableCols = [];
+                            tableColElems.push(tableCols);
+                            var cols = tables[tableIndex].querySelectorAll('col');
+                            for (var i = 0; i < cols.length; i++) {
+                                tableCols.push(cols[i]);
+                            }
                         }
-                        var s_x = evt.screenX;
-                        var current = $(evt.currentTarget);
-                        var cursor = body.css("cursor");
-                        // Add mouse move if the target is eligible for drag
-                        current.mousemove(function(evtUp) {
-                            body.css("cursor", "col-resize");
-                            var delta = evtUp.screenX - s_x;
-                            s_x = evtUp.screenX;
-                            var w_x = target.outerWidth() + delta;
-                            var min = target.css("min-width"); // respect minimum
-                            min = +min.substring(0, min.length - 2); // remove px
-                            var w = Math.max(w_x, min) + "px";
-                            // TODO: Add maximum support
-                            var cols = p.find("col:nth-child(" + (target[0].cellIndex + 1) + ")");
-                            cols.attr("width", w);
+                    }
+                }
 
+                this.setColumnWidth = function (columnIndex, width) {
+                    if (columnIndex === null) {return};
+                    columnIndex = +columnIndex;
+                    if (columnIndex >= 0) {
+                        tableColElems.forEach(function (tableColumns) {
+                            var colElem = tableColumns[columnIndex];
+                            if (colElem) {
+                                colElem.style.width = width;
+                            }
                         });
-                        current.mouseup(function(evt2) {
-                            body.css("cursor", cursor);
-                            current.off("mousemove");
-                            current.off("mouseup");
-                        });
-                    });
-                }, 0, false);
+                    }
+                };
 
+                return this;
+            },
+            compile: function($element, $attrs) {
 
+                var headers = $element[0].querySelectorAll('thead tr th');
+
+                var headerCount = headers.length;
+                while (headerCount--) {
+                    headers[headerCount].setAttribute('resizable-column', '');
+                }
+
+                return function(scope, el, attrs) {
+
+                }
             }
         };
     });
+
+    module.directive("resizableColumn", function($window, nzEventHelper) {
+        return {
+            require: '^tableColumnsResizable',
+            compile: function($element, $attrs) {
+                if  ($attrs.colFixed === 'true') {return;}
+
+                var resizeGripper = angular.element('<div class="resizeGripper"></div>')[0];
+                $element[0].appendChild(resizeGripper);
+
+                // Get Index of current header
+                var thIndex;
+                var allHeaders = $element[0].parentElement.querySelectorAll('TH');
+                for (var i = 0; i < allHeaders.length; i++) {
+                    if ($element[0] === allHeaders[i]) {
+                        thIndex = i;
+                        break;
+                    }
+                }
+
+                return function(scope, element, attrs, tableColumnsResizableCtrl) {
+
+                    var thComputedStyle;
+                    var originalColumnWidth;
+                    var originalCursor;
+                    nzEventHelper.registerMouseDragHandler(resizeGripper,
+                        // Mouse Down
+                        function(mouseDownEvent) {
+                            originalColumnWidth = element[0].getBoundingClientRect().width;
+                            thComputedStyle = $window.getComputedStyle(element[0]);
+                            originalCursor = $window.document.body.style.cursor;
+                            $window.document.body.style.cursor = $window.getComputedStyle(resizeGripper).cursor;
+                        },
+                        // Mouse Move
+                        function(xDelta, yDelta, mouseDownEvent, mouseMoveEvent) {
+                            var newWidth = originalColumnWidth + xDelta;
+                            var maxWidth = parseInt(thComputedStyle.getPropertyValue('max-width'));
+                            var minWidth = parseInt(thComputedStyle.getPropertyValue('min-width'));
+
+                            newWidth = Math.min(newWidth, maxWidth ? maxWidth : Infinity);
+                            newWidth = Math.max(newWidth, minWidth ? minWidth : 0);
+                            tableColumnsResizableCtrl.setColumnWidth(thIndex, newWidth + 'px');
+                        },
+                        // Mouse Up
+                        function(mouseUpEvent) {
+                            $window.document.body.style.cursor = originalCursor;
+                        },
+                        0
+                    );
+
+                }
+            }
+        };
+    });
+
 })(angular, jQuery, Math);
