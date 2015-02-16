@@ -577,7 +577,7 @@ var MouseClickObserver = function($, angular, window) {
                     var thComputedStyle;
                     var originalColumnWidth;
                     var originalCursor;
-                    nzEventHelper.registerMouseDragHandler($(resizeGripper),
+                    nzEventHelper.registerMouseDragHandler(resizeGripper,
                         // Mouse Down
                         function(mouseDownEvent) {
                             originalColumnWidth = element[0].getBoundingClientRect().width;
