@@ -1172,7 +1172,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
 })(angular, jQuery, Math, MutationObserver);
 //End of file
-(function(angular) {
+(function(angular, $) {
 
     'use strict';
 
@@ -1294,4 +1294,4 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                     }
                 };
             }]);
-})(angular);
+})(angular, jQuery);
