@@ -112,6 +112,17 @@
   margin: 0;
   padding: 4px;
 }
+.tableWrapper th {
+  position: relative;
+}
+.tableWrapper .resizeGripper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 15px;
+  cursor: col-resize;
+}
 .col-hidden {
   display: none;
 }
