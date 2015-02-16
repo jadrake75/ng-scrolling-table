@@ -7,12 +7,12 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
     var guid = (function() {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)
-                    .toString(16)
-                    .substring(1);
+                .toString(16)
+                .substring(1);
         }
         return function() {
             return 's' + s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-                    s4() + '-' + s4() + s4() + s4();
+                s4() + '-' + s4() + s4() + s4();
         };
     })();
 
@@ -54,8 +54,8 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
         /**
          * Will ensure that each table row has reference attribute as defined by the refIdAttribute.
          * If no attribute is found, a new guid will be generated and inserted.
-         * 
-         * @param {type} content The current table content   
+         *
+         * @param {type} content The current table content
          * @param {type} refIdAttribute  The reference ID attribute
          */
         function ensureRowIds(content, refIdAttribute) {
@@ -75,7 +75,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 for (var i = 0; i < mlen; ++i) {
                     var mutation = mutations[0];
                     var list = (mutation.addedNodes && mutation.addedNodes.length > 0) ?
-                            mutation.addedNodes : mutation.removedNodes;
+                        mutation.addedNodes : mutation.removedNodes;
                     var len = list.length;
                     if (len > 0) {
                         for (var j = 0; j < len; j++) {
@@ -124,7 +124,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                 }
                 var trLen = $("#" + tableId + " tbody tr").length;
                 if (trLen > lastCount) {
-                   // $log.debug("detected the following addditions:" + (trLen - lastCount));
+                    // $log.debug("detected the following addditions:" + (trLen - lastCount));
                     scope.$emit(TableEvents.insertRows, {
                         tableId: tableId,
                         inserted: (trLen - lastCount)
@@ -166,10 +166,10 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
         /**
          * Configures the column groups for both the table header and table body
          * tables.  If a column group is present on the header it will be used.
-         * However, if one is generated it will set the widths of any existing 
-         * width attributes on the TH elements on the COL elements and remove the 
+         * However, if one is generated it will set the widths of any existing
+         * width attributes on the TH elements on the COL elements and remove the
          * explicit widths from any TH and/or TD cells.
-         * 
+         *
          * @param $element
          * @param headerTable
          * @param dataTable
@@ -204,35 +204,21 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
             }
             colGroup.clone().appendTo(dataTable);
         }
-        
+
         /**
          * Copy attributes to the wrapper that are not table or column directives
          * and insert a comment block of the the directives into the wrapper
-         * 
+         *
          * @param {type} element
          * @param {type} wrapper
          * @returns {String}
          */
         function copyAttributesToWrapper(element, wrapper) {
             var attrs = element[0].attributes;
-            var comment = '';
             angular.forEach(attrs, function(att, index) {
-               var name = att.nodeName;
-               // check both data- and table-/col- forms
-               if( !(name.indexOf('data-table-') === 0 || name.indexOf('table-') === 0 ||
-                       name.indexOf('data-col-') === 0 || name.indexOf('col-') === 0 )) {
-                   wrapper.attr( name, att.value );
-               } else {
-                   if( comment.length === 0 ) {
-                       comment += '<!--\n';
-                   }
-                   comment += '    ' + name + '="' + att.value + '"\n';
-               }
+                // check both data- and table-/col- forms
+                wrapper.attr( att.nodeName, att.value );
             });
-            if( comment.length > 0 ) {
-                comment += '-->';
-            }
-            wrapper.prepend(comment);
         }
 
         return {
@@ -243,9 +229,9 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
             compile: function compile($element, attrs, transclude) {
 
                 var wrapper = $('<div class="tableWrapper" id="' + guid() + '" data-reorderable-columns>' +
-                        '<div class="tableHeader"><table></table></div>' +
-                        '<div class="scroller"><table></table></div>' +
-                        '</div>');
+                '<div class="tableHeader"><table></table></div>' +
+                '<div class="scroller"><table></table></div>' +
+                '</div>');
                 var headerTable = $(wrapper.find('.tableHeader table')[0]);
                 var dataTable = $(wrapper.find('.scroller table')[0]);
                 var thead = $element.find('thead');
@@ -336,7 +322,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
                             calculateScrollerHeight(element);
                             ensureRowIds(element, refIdAttribute);
                         };
-                        
+
                         processFn(element, refIdAttribute);
                         $("#" + tableUUID).resize(calcFn);
 
